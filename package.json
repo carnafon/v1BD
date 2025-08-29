@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "busboy": "^1.6.0",
-    "@neondatabase/serverless": "^0.10.0"
+    "@neondatabase/serverless": "^0.10.0",
+    "cloudinary": "^2.2.0"
   }
 }
