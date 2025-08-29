@@ -11,4 +11,4 @@
   to = "/.netlify/functions/get-data"
   status = 200
   force = true
-  headers = { Basic-Auth = "admin:PASSWORD_SECRETA" }
+  headers = { Basic-Auth = "admin:ibaiondo29" }
