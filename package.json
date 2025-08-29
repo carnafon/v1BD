@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "node-html-parser": "^6.1.13",
-    "busboy": "^1.6.0"
+    "busboy": "^1.6.0",
+    "@neondatabase/serverless": "^0.10.0"
   }
 }
