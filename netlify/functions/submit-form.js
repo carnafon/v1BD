@@ -15,12 +15,13 @@ export async function handler(event) {
   }
 
   const contentType = event.headers['content-type'];
-  const client = new Client(process.env.DATABASE_URL);
   
   try {
-    await client.connect();
-
     if (contentType && contentType.includes('application/json')) {
+      const client = new Client(process.env.DATABASE_URL);
+      await client.connect();
+
+      // Manejar el formulario de RSVP (JSON)
       const data = JSON.parse(event.body);
       const rsvpResult = await client.query(
         `INSERT INTO rsvps (nombre, email, telefono, asistir, menu, alergias, autobus, comentarios)
@@ -48,13 +49,14 @@ export async function handler(event) {
       }
 
       console.log('Datos de RSVP guardados exitosamente. ID:', rsvpId);
+      await client.end();
       
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'RSVP received successfully!' }),
+        body: JSON.stringify({ message: 'RSVP received successfully!', rsvpId: rsvpId }),
       };
     } else if (contentType && contentType.includes('multipart/form-data')) {
-      // El formulario de fotos envía el RSVP ID como un campo oculto
+      // Manejar el formulario de fotos (multipart/form-data)
       let rsvpId = null;
       const filesToUpload = [];
       const bb = busboy({ headers: event.headers });
@@ -80,8 +82,11 @@ export async function handler(event) {
       
       return new Promise((resolve, reject) => {
         bb.on('finish', async () => {
+          const client = new Client(process.env.DATABASE_URL);
+          await client.connect();
+
           if (!rsvpId) {
-            console.error('RSVP ID no encontrado.');
+            await client.end();
             return resolve({ statusCode: 400, body: 'RSVP ID not found' });
           }
 
@@ -100,6 +105,7 @@ export async function handler(event) {
               console.error('Error al subir a Cloudinary:', uploadError);
             }
           }
+          await client.end();
 
           console.log('Fotos subidas a Cloudinary y URLs guardadas en Neon.');
           resolve({
@@ -130,14 +136,5 @@ export async function handler(event) {
       statusCode: 500,
       body: 'Error processing form submission: ' + error.message,
     };
-  } finally {
-    // Es crucial cerrar la conexión en el 'finally'
-    try {
-      if (client && client.end) {
-        await client.end();
-      }
-    } catch (err) {
-      console.error('Error al cerrar la conexión a la DB:', err);
-    }
   }
 }
