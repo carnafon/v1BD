@@ -15,6 +15,25 @@
     .hidden {
       display: none !important;
     }
+    .guest-card {
+        position: relative;
+    }
+    .remove-guest {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0;
+        transition: color 0.2s ease;
+    }
+    .remove-guest:hover {
+        color: var(--brand);
+    }
   </style>
 </head>
 <body>
@@ -207,7 +226,6 @@
       if (alergiasWrap) {
         if (selectElement.value === 'especificar') {
           alergiasWrap.classList.remove('hidden');
-          // No hacemos required aquí, se gestiona en el submit
         } else {
           alergiasWrap.classList.add('hidden');
         }
@@ -217,6 +235,7 @@
     function createGuestFields(guestNumber) {
         return `
             <div class="card guest-card">
+              <button type="button" class="remove-guest" onclick="this.closest('.guest-card').remove();">&times;</button>
               <h3 style="margin-top:0;">Acompañante ${guestNumber}</h3>
               <div class="grid grid-2">
                 <div class="full">
@@ -338,7 +357,7 @@
         }
 
         // Determinar la página de redirección
-        const redirectPage = (data.asistir === 'no') ? '/gracias-fotos.html' : '/gracias.html';
+        const redirectPage = (data.asistir === 'no') ? '/gracias-no.html' : '/gracias.html';
 
         // Convertir a JSON y enviar
         try {
