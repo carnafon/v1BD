@@ -25,7 +25,8 @@ export async function handler(event) {
       // Manejar el formulario de fotos (multipart/form-data)
       const form = new Form();
       const { fields, files } = await new Promise((resolve, reject) => {
-        form.parse(event.body, (err, fields, files) => {
+        // CORRECCIÓN CLAVE: Pasamos el objeto 'event' completo, no solo 'event.body'
+        form.parse(event, (err, fields, files) => {
           if (err) return reject(err);
           resolve({ fields, files });
         });
