@@ -78,16 +78,18 @@
           </div>
           
           <div>
-            <label for="menu">Tu menú</label>
-            <select id="menu" name="menu">
+            <label for="menu">Tu menú *</label>
+            <select id="menu" name="menu" required>
+              <option value="" selected disabled>Selecciona una opción</option>
               <option value="normal">Menú Normal</option>
               <option value="vegetariano">Vegetariano/a</option>
             </select>
           </div>
           
           <div>
-            <label for="alergias">Alergias / intolerancias</label>
-            <select id="alergias" name="alergias" onchange="toggleAlergias(this)">
+            <label for="alergias">Alergias / intolerancias *</label>
+            <select id="alergias" name="alergias" onchange="toggleAlergias(this)" required>
+              <option value="" selected disabled>Selecciona una opción</option>
               <option value="ninguna">Sin intolerancias / alergias</option>
               <option value="especificar">Especificar en comentarios</option>
             </select>
@@ -99,8 +101,9 @@
           </div>
 
           <div>
-            <label for="autobus">Autobús (invitado/a)</label>
-            <select id="autobus" name="autobus">
+            <label for="autobus">Autobús (invitado/a) *</label>
+            <select id="autobus" name="autobus" required>
+              <option value="" selected disabled>Selecciona una opción</option>
               <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
               <option value="moyua">Plaza Moyúa (Bilbao)</option>
               <option value="no">No necesito autobús</option>
@@ -213,16 +216,18 @@
                   <input id="acomp_${guestNumber}_nombre" name="acomp_${guestNumber}_nombre" type="text" required>
                 </div>
                 <div>
-                  <label for="acomp_${guestNumber}_menu">Menú</label>
-                  <select id="acomp_${guestNumber}_menu" name="acomp_${guestNumber}_menu">
+                  <label for="acomp_${guestNumber}_menu">Menú *</label>
+                  <select id="acomp_${guestNumber}_menu" name="acomp_${guestNumber}_menu" required>
+                    <option value="" selected disabled>Selecciona una opción</option>
                     <option value="normal">Menú Normal</option>
                     <option value="vegetariano">Vegetariano/a</option>
                     <option value="infantil">Menú infantil</option>
                   </select>
                 </div>
                 <div>
-                  <label for="acomp_${guestNumber}_alergias">Alergias / intolerancias</label>
-                  <select id="acomp_${guestNumber}_alergias" name="acomp_${guestNumber}_alergias" onchange="toggleAlergias(this, 'acomp_${guestNumber}')">
+                  <label for="acomp_${guestNumber}_alergias">Alergias / intolerancias *</label>
+                  <select id="acomp_${guestNumber}_alergias" name="acomp_${guestNumber}_alergias" onchange="toggleAlergias(this, 'acomp_${guestNumber}')" required>
+                    <option value="" selected disabled>Selecciona una opción</option>
                     <option value="ninguna">Sin intolerancias / alergias</option>
                     <option value="especificar">Especificar</option>
                   </select>
