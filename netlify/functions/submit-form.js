@@ -1,5 +1,4 @@
-import { parse as parseHtml } from 'node-html-parser';
-import { Formidable } from 'formidable';
+import busboy from 'busboy';
 
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
@@ -15,35 +14,57 @@ export async function handler(event) {
       
       console.log('Datos recibidos del formulario de RSVP:', data);
       
-      // Aquí puedes enviar los datos por email o guardarlos.
-      
       return {
         statusCode: 200,
         body: JSON.stringify({ message: 'RSVP received successfully!' }),
       };
     } else if (contentType && contentType.includes('multipart/form-data')) {
       // Manejar el formulario de fotos (multipart/form-data)
-      const form = new Formidable({
-        multiples: true, // Para permitir la subida de múltiples archivos
-        maxFileSize: 5 * 1024 * 1024, // 5MB
-      });
-
-      const { fields, files } = await new Promise((resolve, reject) => {
-        form.parse(event, (err, fields, files) => {
-          if (err) return reject(err);
-          resolve({ fields, files });
+      const fields = {};
+      const files = {};
+      
+      const bb = busboy({ headers: event.headers });
+      
+      bb.on('file', (name, file, info) => {
+        let fileData = Buffer.from([]);
+        file.on('data', (data) => {
+          fileData = Buffer.concat([fileData, data]);
+        });
+        file.on('end', () => {
+          files[name] = {
+            filename: info.filename,
+            mimetype: info.mimeType,
+            data: fileData
+          };
         });
       });
       
-      console.log('Archivos recibidos:', files);
-      console.log('Campos de texto:', fields);
+      bb.on('field', (name, value, info) => {
+        fields[name] = value;
+      });
       
-      // Aquí puedes procesar los archivos subidos.
-      
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Photos received successfully!' }),
-      };
+      return new Promise((resolve, reject) => {
+        bb.on('finish', () => {
+          console.log('Archivos recibidos:', files);
+          console.log('Campos de texto:', fields);
+          
+          resolve({
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Photos received successfully!' }),
+          });
+        });
+        
+        bb.on('error', (err) => {
+          console.error('Busboy error:', err);
+          reject({
+            statusCode: 500,
+            body: 'Busboy error: ' + err.message,
+          });
+        });
+        
+        // El cuerpo del evento de Netlify está codificado en Base64
+        bb.end(Buffer.from(event.body, 'base64'));
+      });
     } else {
       return {
         statusCode: 400,
