@@ -192,6 +192,13 @@
     <p>#OihaneYAnder2026 · Hecho con ❤</p>
   </footer>
 
+  <div id="lightbox" class="lightbox-overlay hidden">
+      <button class="lightbox-close">×</button>
+      <button class="lightbox-prev" aria-label="Foto anterior">‹</button>
+      <img src="" alt="Foto en galería" class="lightbox-img">
+      <button class="lightbox-next" aria-label="Foto siguiente">›</button>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const boroa = [43.24069, -2.752999];
@@ -382,6 +389,55 @@
         }
       });
     });
+
+    // Lógica para el visor de fotos (lightbox)
+    const gallery = document.querySelector('.gallery');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.querySelector('.lightbox-img');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    let galleryImages = Array.from(gallery.querySelectorAll('img'));
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+        currentIndex = index;
+        lightboxImg.src = galleryImages[currentIndex].src;
+        lightbox.classList.remove('hidden');
+    }
+
+    function showNext() {
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        lightboxImg.src = galleryImages[currentIndex].src;
+    }
+
+    function showPrev() {
+        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        lightboxImg.src = galleryImages[currentIndex].src;
+    }
+
+    gallery.addEventListener('click', (e) => {
+        if (e.target.tagName === 'IMG') {
+            const index = galleryImages.indexOf(e.target);
+            openLightbox(index);
+        }
+    });
+
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.add('hidden');
+    });
+
+    lightboxNext.addEventListener('click', showNext);
+    lightboxPrev.addEventListener('click', showPrev);
+
+    // Cerrar con la tecla Esc
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+            lightbox.classList.add('hidden');
+        }
+    });
+
   </script>
 </body>
 </html>
