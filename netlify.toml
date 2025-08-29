@@ -5,11 +5,10 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-  [[redirects]]
+# Regla para proteger el panel de administración con contraseña
+[[redirects]]
   from = "/admin.html"
   to = "/.netlify/functions/get-data"
   status = 200
   force = true
-  
-  [redirects.headers]
-    Basic-Auth = "admin:PASSWORD_SECRETA"
+  headers = { Basic-Auth = "admin:PASSWORD_SECRETA" }
