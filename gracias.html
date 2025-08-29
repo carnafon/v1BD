@@ -118,13 +118,23 @@
       photosForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const formData = new FormData(photosForm);
-          formData.append('rsvpId', '{{ rsvpId }}'); // Este valor debe venir de la URL o de algún lugar
+
+          e.preventDefault();
+          const rsvpId = localStorage.getItem('rsvpId');
+          if (!rsvpId) {
+            console.error('No se encontró el ID de RSVP en localStorage.');
+            alert('No se pudo asociar las fotos. Por favor, vuelve a la página principal.');
+            return;
+          }
+
+          const formData = new FormData(photosForm);
+          formData.append('rsvpId', rsvpId); // Añadimos el ID real
+          
           try {
               const response = await fetch(photosForm.action, {
                   method: 'POST',
                   body: formData,
               });
-
               if (response.ok) {
                   window.location.href = '/gracias-fotos.html';
               } else {
@@ -141,3 +151,4 @@
 </body>
 
 </html>
+
