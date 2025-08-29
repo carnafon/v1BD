@@ -193,10 +193,12 @@
   </footer>
 
   <div id="lightbox" class="lightbox-overlay hidden">
-      <button class="lightbox-close">×</button>
-      <button class="lightbox-prev" aria-label="Foto anterior">‹</button>
-      <img src="" alt="Foto en galería" class="lightbox-img">
-      <button class="lightbox-next" aria-label="Foto siguiente">›</button>
+      <div class="lightbox-content">
+          <button class="lightbox-close">×</button>
+          <button class="lightbox-prev" aria-label="Foto anterior">‹</button>
+          <img src="" alt="Foto en galería" class="lightbox-img">
+          <button class="lightbox-next" aria-label="Foto siguiente">›</button>
+      </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -426,6 +428,12 @@
 
     lightboxClose.addEventListener('click', () => {
         lightbox.classList.add('hidden');
+    });
+
+    lightbox.addEventListener('click', (e) => {
+        if (e.target.id === 'lightbox') {
+            lightbox.classList.add('hidden');
+        }
     });
 
     lightboxNext.addEventListener('click', showNext);
