@@ -294,7 +294,9 @@
                 body: JSON.stringify(data),
             });
 
-            if (response.ok) {
+        if (response.ok) {
+                const result = await response.json();
+                localStorage.setItem('rsvpId', result.rsvpId); // Guardamos el ID en localStorage
                 window.location.href = '/gracias.html';
             } else {
                 console.error('Error en el servidor:', await response.text());
