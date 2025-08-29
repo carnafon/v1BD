@@ -245,6 +245,14 @@
       menuToggle.setAttribute('aria-expanded', !isExpanded);
       navbarMenu.classList.toggle('is-open');
     });
+    
+    // Nueva lógica: cerrar el menú al hacer clic en un enlace
+    navbarMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        navbarMenu.classList.remove('is-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
 
     // Lógica del formulario
     document.addEventListener('DOMContentLoaded', () => {
