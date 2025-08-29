@@ -1,5 +1,5 @@
-import { parse } from 'node-html-parser';
-import { parse as parseMultipart } from 'multiparty';
+import { parse as parseHtml } from 'node-html-parser';
+import { Form } from 'multiparty';
 
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
@@ -23,7 +23,7 @@ export async function handler(event) {
       };
     } else if (contentType && contentType.includes('multipart/form-data')) {
       // Manejar el formulario de fotos (multipart/form-data)
-      const form = new parseMultipart();
+      const form = new Form();
       const { fields, files } = await new Promise((resolve, reject) => {
         form.parse(event.body, (err, fields, files) => {
           if (err) return reject(err);
