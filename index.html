@@ -407,6 +407,7 @@
         currentIndex = index;
         lightboxImg.src = galleryImages[currentIndex].src;
         lightbox.classList.remove('hidden');
+        document.body.classList.add('blur-active');
     }
 
     function showNext() {
@@ -419,6 +420,11 @@
         lightboxImg.src = galleryImages[currentIndex].src;
     }
 
+    function closeLightbox() {
+        lightbox.classList.add('hidden');
+        document.body.classList.remove('blur-active');
+    }
+
     gallery.addEventListener('click', (e) => {
         if (e.target.tagName === 'IMG') {
             const index = galleryImages.indexOf(e.target);
@@ -426,13 +432,11 @@
         }
     });
 
-    lightboxClose.addEventListener('click', () => {
-        lightbox.classList.add('hidden');
-    });
+    lightboxClose.addEventListener('click', closeLightbox);
 
     lightbox.addEventListener('click', (e) => {
         if (e.target.id === 'lightbox') {
-            lightbox.classList.add('hidden');
+            closeLightbox();
         }
     });
 
@@ -442,7 +446,7 @@
     // Cerrar con la tecla Esc
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-            lightbox.classList.add('hidden');
+            closeLightbox();
         }
     });
 
