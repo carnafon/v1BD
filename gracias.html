@@ -21,95 +21,55 @@
         <br>Nos ayudará a identificar a todos nuestros seres queridos. ¡Sube tantas como quieras!
       </p>
 
-      <form name="guest-photos-2026" id="photos-form" method="POST" action="/.netlify/functions/submit-form" enctype="multipart/form-data">
-        <div id="file-upload-inputs" class="file-input-wrapper">
-          
+      <form name="guest-photos-2026" id="photos-form" method="POST" action="/.netlify/functions/submit-form">
+        <div class="file-input-wrapper">
+          <input type="file" name="file1" id="file1" accept="image/*" multiple>
+          <label for="file1" class="custom-file-upload">Seleccionar fotos</label>
         </div>
-        <p class="photo-upload-hint">Puedes añadir más archivos haciendo clic de nuevo.</p>
-        <button type="button" class="btn-outline" id="add-photo-btn">Añadir otra foto</button>
-
-        <div id="photo-previews" class="preview-container">
-          
-        </div>
-
-        <button type="submit" class="btn-primary">Enviar fotos</button>
+        <div class="preview-container"></div>
+        <button type="submit" class="btn-primary" id="submit-photos-btn" style="margin-top: 1rem;">
+          Subir fotos
+        </button>
       </form>
-
-      <p style="margin-top: 2rem;">¿Necesitas volver al inicio? <a href="/" class="btn-outline" style="text-decoration: none;">Volver a la web</a></p>
     </div>
   </main>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const fileUploadInputs = document.getElementById('file-upload-inputs');
-      const addPhotoBtn = document.getElementById('add-photo-btn');
-      const photoPreviews = document.getElementById('photo-previews');
-      let fileCount = 0;
-      let filesToUpload = [];
+      const fileInput = document.getElementById('file1');
+      const previewContainer = document.querySelector('.preview-container');
+      const filesToUpload = [];
 
-      function addFileInput() {
-        fileCount++;
-        const uniqueId = `photo_${fileCount}`;
-        const inputContainer = document.createElement('div');
-        inputContainer.className = 'custom-file-upload-container';
-        
-        const label = document.createElement('label');
-        label.className = 'custom-file-upload';
-        label.htmlFor = uniqueId;
-        label.innerHTML = `Seleccionar foto ${fileCount}`;
-
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.id = uniqueId;
-        input.name = `guest_photo_${fileCount}`;
-        input.accept = 'image/*';
-        input.multiple = false;
-
-        input.addEventListener('change', (event) => {
-          if (event.target.files.length > 0) {
-            const file = event.target.files[0];
+      fileInput.addEventListener('change', (e) => {
+        const files = e.target.files;
+        if (files.length > 0) {
+          for (const file of files) {
             const reader = new FileReader();
-
-            reader.onload = (e) => {
+            reader.onload = (event) => {
               const previewItem = document.createElement('div');
-              previewItem.className = 'preview-item';
-              previewItem.innerHTML = `<img src="${e.target.result}" alt="Foto ${uniqueId}">
-                                       <button type="button" class="remove-photo-btn" data-id="${uniqueId}">X</button>`;
-              photoPreviews.appendChild(previewItem);
+              previewItem.classList.add('preview-item');
               
-              filesToUpload.push({ id: uniqueId, file: file, inputElement: input });
+              const img = document.createElement('img');
+              img.src = event.target.result;
+              img.alt = file.name;
 
-              label.textContent = file.name;
-              label.classList.add('file-selected');
+              const removeBtn = document.createElement('button');
+              removeBtn.textContent = 'x';
+              removeBtn.classList.add('remove-btn');
+              removeBtn.addEventListener('click', () => {
+                previewItem.remove();
+                const indexToRemove = filesToUpload.findIndex(f => f.file === file);
+                if (indexToRemove !== -1) {
+                    filesToUpload.splice(indexToRemove, 1);
+                }
+              });
+
+              previewItem.appendChild(img);
+              previewItem.appendChild(removeBtn);
+              previewContainer.appendChild(previewItem);
             };
             reader.readAsDataURL(file);
-          }
-        });
-
-        fileUploadInputs.appendChild(input);
-        fileUploadInputs.appendChild(label);
-      }
-
-      addFileInput();
-
-      addPhotoBtn.addEventListener('click', addFileInput);
-
-      photoPreviews.addEventListener('click', (event) => {
-        if (event.target.classList.contains('remove-photo-btn')) {
-          const uniqueIdToRemove = event.target.dataset.id;
-          event.target.closest('.preview-item').remove();
-
-          const indexToRemove = filesToUpload.findIndex(f => f.id === uniqueIdToRemove);
-          if (indexToRemove !== -1) {
-            const removedFile = filesToUpload.splice(indexToRemove, 1)[0];
-            if (removedFile.inputElement) {
-                removedFile.inputElement.value = '';
-                const labelForInput = document.querySelector(`label[for="${removedFile.inputElement.id}"]`);
-                if(labelForInput) {
-                    labelForInput.textContent = `Seleccionar foto ${removedFile.inputElement.id.split('_')[1]}`;
-                    labelForInput.classList.remove('file-selected');
-                }
-            }
+            filesToUpload.push({ file: file, name: file.name });
           }
         }
       });
@@ -117,9 +77,7 @@
       const photosForm = document.getElementById('photos-form');
       photosForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const formData = new FormData(photosForm);
-
-          e.preventDefault();
+          
           const rsvpId = localStorage.getItem('rsvpId');
           if (!rsvpId) {
             console.error('No se encontró el ID de RSVP en localStorage.');
@@ -127,14 +85,18 @@
             return;
           }
 
-          const formData = new FormData(photosForm);
-          formData.append('rsvpId', rsvpId); // Añadimos el ID real
+          const formData = new FormData();
+          filesToUpload.forEach(f => {
+              formData.append('photos', f.file, f.name);
+          });
+          formData.append('rsvpId', rsvpId);
           
           try {
               const response = await fetch(photosForm.action, {
                   method: 'POST',
                   body: formData,
               });
+
               if (response.ok) {
                   window.location.href = '/gracias-fotos.html';
               } else {
@@ -149,6 +111,4 @@
     });
   </script>
 </body>
-
 </html>
-
