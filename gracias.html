@@ -118,7 +118,7 @@
       photosForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const formData = new FormData(photosForm);
-          
+          formData.append('rsvpId', '{{ rsvpId }}'); // Este valor debe venir de la URL o de algún lugar
           try {
               const response = await fetch(photosForm.action, {
                   method: 'POST',
@@ -139,4 +139,5 @@
     });
   </script>
 </body>
+
 </html>
