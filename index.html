@@ -407,7 +407,6 @@
         currentIndex = index;
         lightboxImg.src = galleryImages[currentIndex].src;
         lightbox.classList.remove('hidden');
-        document.body.classList.add('blur-active');
     }
 
     function showNext() {
@@ -422,7 +421,6 @@
 
     function closeLightbox() {
         lightbox.classList.add('hidden');
-        document.body.classList.remove('blur-active');
     }
 
     gallery.addEventListener('click', (e) => {
@@ -449,7 +447,6 @@
             closeLightbox();
         }
     });
-
   </script>
 </body>
 </html>
