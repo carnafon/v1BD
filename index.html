@@ -82,10 +82,10 @@
             </select>
           </div>
           
-          <div id="asistir-si-options">
+          <div id="asistir-si-options" class="grid grid-2">
             <div>
               <label for="menu">Tu menú *</label>
-              <select id="menu" name="menu" required>
+              <select id="menu" name="menu">
                 <option value="" selected disabled>Selecciona una opción</option>
                 <option value="normal">Menú Normal</option>
                 <option value="vegetariano">Vegetariano/a</option>
@@ -94,7 +94,7 @@
             
             <div>
               <label for="alergias">Alergias / intolerancias *</label>
-              <select id="alergias" name="alergias" onchange="toggleAlergias(this)" required>
+              <select id="alergias" name="alergias" onchange="toggleAlergias(this)">
                 <option value="" selected disabled>Selecciona una opción</option>
                 <option value="ninguna">Sin intolerancias / alergias</option>
                 <option value="especificar">Especificar en comentarios</option>
@@ -108,7 +108,7 @@
 
             <div>
               <label for="autobus">Autobús (invitado/a) *</label>
-              <select id="autobus" name="autobus" required>
+              <select id="autobus" name="autobus">
                 <option value="" selected disabled>Selecciona una opción</option>
                 <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
                 <option value="moyua">Plaza Moyúa (Bilbao)</option>
@@ -141,211 +141,4 @@
       </div>
     </section>
 
-    <section id="regalo" class="grid">
-      <div class="card">
-        <h2>Regalo</h2>
-        <p class="small">Vuestra compañía es el mejor regalo. Si aun así deseáis tener un detalle, os dejamos el IBAN:</p>
-        <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
-          <code class="iban">ES50 2095 0039 1091 2543 9193</code>
-          <button class="copy" type="button" onclick="navigator.clipboard.writeText('ES5020950039109125439193')">Copiar IBAN</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="galeria" class="grid">
-      <div class="card">
-        <h2>Galería</h2>
-        <div class="gallery">
-          <figure><img src="/assets/gallery1.jpg" alt="Foto 1"></figure>
-          <figure><img src="/assets/gallery2.jpg" alt="Foto 2"></figure>
-          <figure><img src="/assets/gallery3.jpg" alt="Foto 3"></figure>
-          <figure><img src="/assets/gallery4.jpg" alt="Foto 4"></figure>
-          <figure><img src="/assets/gallery5.jpg" alt="Foto 5"></figure>
-          <figure><img src="/assets/gallery6.jpg" alt="Foto 6"></figure>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>#OihaneYAnder2026 · Hecho con ❤</p>
-  </footer>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script>
-    const boroa = [43.24069, -2.752999];
-    const moyua = [43.26303, -2.93496];
-    const colgante = [43.3231, -3.0169];
-    const map = L.map('map');
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
-    const foodIcon = L.divIcon({className:'pin pin-food', html:'\ud83c\udf7d\ufe0f', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-28]});
-    const busIcon  = L.divIcon({className:'pin pin-bus',  html:'\ud83d\ude8c', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-28]});
-    const markers = [
-      L.marker(boroa, {icon: foodIcon})
-        .bindPopup('<b>Restaurante Boroa</b><br>Amorebieta<br>Clic para abrir en Google Maps')
-        .on('click', function(e) {
-          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
-        }),
-      L.marker(moyua, {icon: busIcon})
-        .bindPopup('<b>Plaza Moyúa</b><br>Bilbao — Punto de autobús<br>Clic para abrir en Google Maps')
-        .on('click', function(e) {
-          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
-        }),
-      L.marker(colgante, {icon: busIcon})
-        .bindPopup('<b>Puente Colgante</b><br>Las Arenas / Getxo — Punto de autobús<br>Clic para abrir en Google Maps')
-        .on('click', function(e) {
-          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
-        })
-    ];
-    const group = L.featureGroup(markers).addTo(map);
-    map.fitBounds(group.getBounds(), { padding: [20,20] });
-
-    // Funciones para la lógica del formulario
-    function toggleAlergias(selectElement, prefix = '') {
-      const id = prefix ? `${prefix}_alergias_detalle_wrap` : 'alergias_detalle_wrap';
-      const alergiasWrap = document.getElementById(id);
-      if (alergiasWrap) {
-        if (selectElement.value === 'especificar') {
-          alergiasWrap.classList.remove('hidden');
-        } else {
-          alergiasWrap.classList.add('hidden');
-        }
-      }
-    }
-    
-    function createGuestFields(guestNumber) {
-        return `
-            <div class="card guest-card">
-              <h3 style="margin-top:0;">Acompañante ${guestNumber}</h3>
-              <div class="grid grid-2">
-                <div class="full">
-                  <label for="acomp_${guestNumber}_nombre">Nombre y apellidos *</label>
-                  <input id="acomp_${guestNumber}_nombre" name="acomp_${guestNumber}_nombre" type="text" required>
-                </div>
-                <div>
-                  <label for="acomp_${guestNumber}_menu">Menú *</label>
-                  <select id="acomp_${guestNumber}_menu" name="acomp_${guestNumber}_menu" required>
-                    <option value="" selected disabled>Selecciona una opción</option>
-                    <option value="normal">Menú Normal</option>
-                    <option value="vegetariano">Vegetariano/a</option>
-                    <option value="infantil">Menú infantil</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="acomp_${guestNumber}_alergias">Alergias / intolerancias *</label>
-                  <select id="acomp_${guestNumber}_alergias" name="acomp_${guestNumber}_alergias" onchange="toggleAlergias(this, 'acomp_${guestNumber}')" required>
-                    <option value="" selected disabled>Selecciona una opción</option>
-                    <option value="ninguna">Sin intolerancias / alergias</option>
-                    <option value="especificar">Especificar</option>
-                  </select>
-                </div>
-                <div class="full hidden" id="acomp_${guestNumber}_alergias_detalle_wrap">
-                  <label for="acomp_${guestNumber}_alergias_detalle">Detalle de alergias</label>
-                  <textarea id="acomp_${guestNumber}_alergias_detalle" name="acomp_${guestNumber}_alergias_detalle"></textarea>
-                </div>
-              </div>
-            </div>
-        `;
-    }
-
-    // Lógica del menú desplegable
-    const menuToggle = document.getElementById('menu-toggle');
-    const navbarMenu = document.getElementById('navbar-menu');
-
-    menuToggle.addEventListener('click', () => {
-      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-      menuToggle.setAttribute('aria-expanded', !isExpanded);
-      navbarMenu.classList.toggle('is-open');
-    });
-    
-    // Nueva lógica: cerrar el menú al hacer clic en un enlace
-    navbarMenu.addEventListener('click', (e) => {
-      if (e.target.tagName === 'A') {
-        navbarMenu.classList.remove('is-open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    // Lógica del formulario
-    document.addEventListener('DOMContentLoaded', () => {
-      // Ocultar campos de alergias al inicio
-      toggleAlergias(document.getElementById('alergias'));
-
-      // Lógica para ocultar/mostrar campos si la persona asiste o no
-      const asistirSelect = document.getElementById('asistir');
-      const asistirSiOptions = document.getElementById('asistir-si-options');
-      
-      const toggleFieldsOnAsistir = () => {
-        if (asistirSelect.value === 'no') {
-          asistirSiOptions.classList.add('hidden');
-        } else {
-          asistirSiOptions.classList.remove('hidden');
-        }
-      };
-
-      asistirSelect.addEventListener('change', toggleFieldsOnAsistir);
-      toggleFieldsOnAsistir(); // Llamar al cargar la página para que el estado inicial sea correcto
-
-      // Lógica para añadir acompañantes dinámicamente
-      const addGuestBtn = document.getElementById('add_guest_btn');
-      const guestsContainer = document.getElementById('guests_container');
-      let guestCount = 0;
-
-      addGuestBtn.addEventListener('click', () => {
-        guestCount++;
-        guestsContainer.insertAdjacentHTML('beforeend', createGuestFields(guestCount));
-      });
-      
-      // Mostrar el nombre del invitado principal en el título
-      const nombreInput = document.getElementById('nombre');
-      const formTitle = document.getElementById('form_title');
-      
-      nombreInput.addEventListener('input', (e) => {
-        const name = e.target.value.trim();
-        if (name) {
-          formTitle.textContent = `${name}`;
-        } else {
-          formTitle.textContent = 'Confirmar asistencia';
-        }
-      });
-      
-      // Manejar el envío del formulario con JavaScript
-      const rsvpForm = document.getElementById('rsvp-form');
-      rsvpForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Evita el envío tradicional del formulario
-        const formData = new FormData(rsvpForm);
-        const data = {};
-        for (let [key, value] of formData.entries()) {
-            data[key] = value;
-        }
-
-        // Determinar la página de redirección
-        const redirectPage = (data.asistir === 'no') ? '/gracias-fotos.html' : '/gracias.html';
-
-        // Convertir a JSON y enviar
-        try {
-            const response = await fetch(rsvpForm.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                localStorage.setItem('rsvpId', result.rsvpId);
-                window.location.href = redirectPage;
-            } else {
-                console.error('Error en el servidor:', await response.text());
-                alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.');
-            }
-        } catch (error) {
-            console.error('Error de red:', error);
-            alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.');
-        }
-      });
-    });
-  </script>
-</body>
-</html>
+    <section
