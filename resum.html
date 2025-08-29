@@ -86,6 +86,7 @@
             <th>Comentarios</th>
             <th>Acompañantes</th>
             <th>Fotos</th>
+            <th>Asistentes del grupo</th>
           </tr>
         </thead>
         <tbody>
@@ -121,6 +122,9 @@
         tbody.innerHTML = '';
         rsvpData.forEach(rsvp => {
           const row = document.createElement('tr');
+          const numAcompanantes = (rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre) ? rsvp.acompanantes.length : 0;
+          const totalAsistentes = (rsvp.asistir === 'si') ? (1 + numAcompanantes) : 0;
+
           row.innerHTML = `
             <td><strong>${rsvp.nombre}</strong></td>
             <td>${rsvp.email || ''}</td>
@@ -132,7 +136,7 @@
             <td>${rsvp.comentarios || ''}</td>
             <td>
               <ul class="guest-info">
-                ${rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre ? 
+                ${(rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre) ? 
                   rsvp.acompanantes.map(g => `
                     <li>
                       ${g.nombre} (${g.menu})
@@ -143,7 +147,7 @@
             </td>
             <td>
               <ul class="photo-info">
-                ${rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url ?
+                ${(rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url) ?
                   rsvp.fotos.map(p => `
                     <li><a href="${p.url}" target="_blank">
                       <img src="${p.url}" alt="${p.nombre_archivo}" class="photo-thumb">
@@ -151,6 +155,7 @@
                   `).join('') : '—'}
               </ul>
             </td>
+            <td>${totalAsistentes}</td>
           `;
           tbody.appendChild(row);
         });
@@ -168,9 +173,11 @@
             return;
         }
 
-        let csv = 'Nombre,Email,Teléfono,Asistencia,Menú,Alergias,Autobús,Comentarios,Acompañantes,Fotos\n';
+        let csv = 'Nombre,Email,Teléfono,Asistencia,Menú,Alergias,Autobús,Comentarios,Acompañantes,Fotos,Asistentes del grupo\n';
 
         rsvpData.forEach(rsvp => {
+            const numAcompanantes = (rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre) ? rsvp.acompanantes.length : 0;
+            const totalAsistentes = (rsvp.asistir === 'si') ? (1 + numAcompanantes) : 0;
             const row = [
                 `"${rsvp.nombre}"`,
                 `"${rsvp.email || ''}"`,
@@ -181,7 +188,8 @@
                 `"${rsvp.autobus || ''}"`,
                 `"${rsvp.comentarios || ''}"`,
                 `"${(rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre) ? rsvp.acompanantes.map(g => `${g.nombre} (${g.menu}) - ${g.alergias || 'Sin alergias'}`).join('; ') : ''}"`,
-                `"${(rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url) ? rsvp.fotos.map(p => p.url).join('; ') : ''}"`
+                `"${(rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url) ? rsvp.fotos.map(p => p.url).join('; ') : ''}"`,
+                `"${totalAsistentes}"`
             ];
             csv += row.join(',') + '\n';
         });
