@@ -5,6 +5,6 @@
   "type": "module",
   "dependencies": {
     "node-html-parser": "^6.1.13",
-    "formidable": "^3.5.1"
+    "busboy": "^1.6.0"
   }
 }
