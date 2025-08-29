@@ -298,12 +298,12 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
     border: 1px solid rgba(255, 255, 255, 0.4);
     color: white;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Aumentado */
+    height: 50px; /* Aumentado */
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
+    font-size: 2rem; /* Aumentado */
     cursor: pointer;
     backdrop-filter: blur(10px);
     transition: all 0.2s ease;
@@ -320,29 +320,38 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 .lightbox-close {
     top: -1.5rem;
     right: -1.5rem;
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
+    font-size: 2.5rem; /* También aumentado el botón de cerrar */
+    width: 60px; /* Aumentado */
+    height: 60px; /* Aumentado */
 }
 
 .lightbox-prev {
-    left: -2rem;
+    left: -2.5rem; /* Ajustado para el nuevo tamaño */
 }
 
 .lightbox-next {
-    right: -2rem;
+    right: -2.5rem; /* Ajustado para el nuevo tamaño */
 }
 
 @media (max-width: 768px) {
   .lightbox-close {
     top: 0.5rem;
     right: 0.5rem;
+    width: 45px; /* Ajuste para móviles */
+    height: 45px; /* Ajuste para móviles */
+    font-size: 1.8rem;
   }
   .lightbox-prev {
     left: 0.5rem;
+    width: 45px; /* Ajuste para móviles */
+    height: 45px; /* Ajuste para móviles */
+    font-size: 1.8rem;
   }
   .lightbox-next {
     right: 0.5rem;
+    width: 45px; /* Ajuste para móviles */
+    height: 45px; /* Ajuste para móviles */
+    font-size: 1.8rem;
   }
   .lightbox-content {
     max-width: 100%;
