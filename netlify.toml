@@ -4,3 +4,12 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+  [[redirects]]
+  from = "/admin.html"
+  to = "/.netlify/functions/get-data"
+  status = 200
+  force = true
+  
+  [redirects.headers]
+    Basic-Auth = "admin:PASSWORD_SECRETA"
