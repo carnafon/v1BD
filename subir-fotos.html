@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Álbum de fotos de la boda — Oihane & Ander</title>
+  <meta name="description" content="Sube tus fotos de la boda a nuestro álbum.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main>
+    <div class="thank-you-container">
+      <h1>¡Sube tus fotos de la boda! 🎉</h1>
+      <p>
+        ¡Gracias por ayudarnos a capturar cada momento! Sube tantas fotos como quieras para que todos podamos recordarlos.
+      </p>
+
+      <form name="guest-photos-2026" id="photos-form" method="POST" action="/.netlify/functions/submit-form" enctype="multipart/form-data">
+        <div id="file-inputs-container">
+          <label class="custom-file-upload" for="file_1">
+            Seleccionar foto
+          </label>
+          <input type="file" id="file_1" name="file_1" accept="image/jpeg, image/png, image/heic" required>
+        </div>
+
+        <div id="preview-container" class="preview-container"></div>
+
+        <div class="file-input-wrapper">
+          <button type="button" class="btn-outline" id="add-photo-btn">Añadir otra foto</button>
+          <button type="submit" class="btn-primary" style="margin-top:1rem">Subir todas las fotos</button>
+          <span class="photo-upload-hint">Sube fotos en formato JPG, PNG o HEIC.</span>
+        </div>
+      </form>
+      <a href="/" class="btn-outline">Volver a la web principal</a>
+    </div>
+  </main>
+  <script>
+    const photosForm = document.getElementById('photos-form');
+    const fileInputsContainer = document.getElementById('file-inputs-container');
+    const previewContainer = document.getElementById('preview-container');
+    const addPhotoBtn = document.getElementById('add-photo-btn');
+
+    let fileCount = 1;
+
+    // Función para añadir nuevos campos de archivo
+    function addFileInput() {
+      fileCount++;
+      const newLabel = document.createElement('label');
+      newLabel.classList.add('custom-file-upload');
+      newLabel.htmlFor = `file_${fileCount}`;
+      newLabel.textContent = `Seleccionar foto`;
+
+      const newInput = document.createElement('input');
+      newInput.type = 'file';
+      newInput.id = `file_${fileCount}`;
+      newInput.name = `file_${fileCount}`;
+      newInput.accept = 'image/jpeg, image/png, image/heic';
+      newInput.required = true;
+
+      fileInputsContainer.appendChild(newLabel);
+      fileInputsContainer.appendChild(newInput);
+    }
+
+    // Previsualización de imágenes
+    fileInputsContainer.addEventListener('change', (e) => {
+      if (e.target.type === 'file') {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const previewItem = document.createElement('div');
+            previewItem.classList.add('preview-item');
+            previewItem.dataset.id = e.target.inputElement.id;
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = file.name;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.classList.add('remove-photo-btn');
+            removeBtn.textContent = 'x';
+
+            previewItem.appendChild(img);
+            previewItem.appendChild(removeBtn);
+            previewContainer.appendChild(previewItem);
+
+            // Actualizar la etiqueta del archivo seleccionado
+            const label = document.querySelector(`label[for="${e.target.inputElement.id}"]`);
+            if (label) {
+                label.textContent = `Foto lista: ${file.name}`;
+                label.classList.add('file-selected');
+            }
+
+            // Si la última entrada de archivo está llena, añadir una nueva.
+            if (e.target.id === `file_${fileCount}`) {
+                //addFileInput();
+            }
+          };
+          reader.readAsDataURL(file);
+          e.target.inputElement = e.target;
+        }
+      }
+    });
+
+    // Eliminar previsualización
+    previewContainer.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-photo-btn')) {
+        const previewItem = e.target.closest('.preview-item');
+        const fileInputId = previewItem.dataset.id;
+        const fileInput = document.getElementById(fileInputId);
+        const label = document.querySelector(`label[for="${fileInputId}"]`);
+
+        // Eliminar el input y el preview
+        fileInput.remove();
+        label.remove();
+        previewItem.remove();
+      }
+    });
+
+    // Lógica para añadir inputs de forma dinámica
+    addPhotoBtn.addEventListener('click', () => {
+      addFileInput();
+    });
+  </script>
+</body>
+</html>
