@@ -45,6 +45,7 @@
         <div class="hero-sub">6 de junio de 2026 · Amorebieta · Restaurante Boroa</div>
         <h1 class="hero-title">Oihane & Ander</h1>
         <div class="hero-meta">¡Nos hace muchísima ilusión celebrar este día con vosotros!</div>
+        <div class="countdown" id="countdown"></div>
       </div>
     </div>
   </header>
@@ -447,6 +448,33 @@
             closeLightbox();
         }
     });
+
+    // Código del contador de cuenta atrás
+    const countdown = document.getElementById("countdown");
+    const weddingDate = new Date("2026-06-06T00:00:00").getTime();
+
+    const updateCountdown = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = weddingDate - now;
+
+      if (distance < 0) {
+        clearInterval(updateCountdown);
+        countdown.innerHTML = "¡Es el gran día!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdown.innerHTML = `
+        <div class="countdown-item"><strong>${days}</strong> días</div>
+        <div class="countdown-item"><strong>${hours}</strong> horas</div>
+        <div class="countdown-item"><strong>${minutes}</strong> minutos</div>
+        <div class="countdown-item"><strong>${seconds}</strong> segundos</div>
+      `;
+    }, 1000);
   </script>
 </body>
 </html>
