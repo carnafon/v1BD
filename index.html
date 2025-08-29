@@ -107,7 +107,7 @@
             </select>
           </div>
           
-          <div class="full">
+          <div class="full" id="add_guest_btn_wrap">
             <div id="guests_container"></div>
             <button type="button" class="btn-outline" id="add_guest_btn">Añadir acompañante</button>
           </div>
@@ -251,6 +251,21 @@
       // Ocultar campos de alergias al inicio
       toggleAlergias(document.getElementById('alergias'));
 
+      // Ocultar el botón de acompañantes si la persona no asiste
+      const asistirSelect = document.getElementById('asistir');
+      const addGuestBtnWrap = document.getElementById('add_guest_btn_wrap');
+      
+      const toggleAddGuestButton = () => {
+        if (asistirSelect.value === 'no') {
+          addGuestBtnWrap.classList.add('hidden');
+        } else {
+          addGuestBtnWrap.classList.remove('hidden');
+        }
+      };
+
+      asistirSelect.addEventListener('change', toggleAddGuestButton);
+      toggleAddGuestButton(); // Llamar al cargar la página para que el estado inicial sea correcto
+
       // Lógica para añadir acompañantes dinámicamente
       const addGuestBtn = document.getElementById('add_guest_btn');
       const guestsContainer = document.getElementById('guests_container');
@@ -294,9 +309,9 @@
                 body: JSON.stringify(data),
             });
 
-        if (response.ok) {
+            if (response.ok) {
                 const result = await response.json();
-                localStorage.setItem('rsvpId', result.rsvpId); // Guardamos el ID en localStorage
+                localStorage.setItem('rsvpId', result.rsvpId);
                 window.location.href = '/gracias.html';
             } else {
                 console.error('Error en el servidor:', await response.text());
