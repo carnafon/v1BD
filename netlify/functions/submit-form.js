@@ -1,5 +1,13 @@
 import busboy from 'busboy';
 import { Client } from '@neondatabase/serverless';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configura Cloudinary con tus variables de entorno de Netlify
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
@@ -13,10 +21,7 @@ export async function handler(event) {
     await client.connect();
 
     if (contentType && contentType.includes('application/json')) {
-      // Manejar el formulario de RSVP (JSON)
       const data = JSON.parse(event.body);
-
-      // Inserción en la tabla 'rsvps'
       const rsvpResult = await client.query(
         `INSERT INTO rsvps (nombre, email, telefono, asistir, menu, alergias, autobus, comentarios)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -26,7 +31,6 @@ export async function handler(event) {
       
       const rsvpId = rsvpResult.rows[0].id;
       
-      // Manejar acompañantes dinámicamente
       for (let i = 1; ; i++) {
         const guestNameKey = `acomp_${i}_nombre`;
         if (data[guestNameKey]) {
@@ -50,10 +54,9 @@ export async function handler(event) {
         body: JSON.stringify({ message: 'RSVP received successfully!' }),
       };
     } else if (contentType && contentType.includes('multipart/form-data')) {
-      // Manejar el formulario de fotos (multipart/form-data)
-      const fields = {};
-      const files = {};
-      
+      // El formulario de fotos envía el RSVP ID como un campo oculto
+      let rsvpId = null;
+      const filesToUpload = [];
       const bb = busboy({ headers: event.headers });
       
       bb.on('file', (name, file, info) => {
@@ -62,30 +65,46 @@ export async function handler(event) {
           fileData = Buffer.concat([fileData, data]);
         });
         file.on('end', () => {
-          files[name] = {
-            filename: info.filename,
-            mimetype: info.mimeType,
+          filesToUpload.push({
+            name: info.filename,
             data: fileData
-          };
+          });
         });
       });
       
       bb.on('field', (name, value, info) => {
-        fields[name] = value;
+        if (name === 'rsvpId') {
+          rsvpId = value;
+        }
       });
       
       return new Promise((resolve, reject) => {
         bb.on('finish', async () => {
-          console.log('Archivos recibidos:', files);
-          console.log('Campos de texto:', fields);
-          
-          // Nota: Guardar fotos requiere un servicio externo como Cloudinary o S3.
-          // Aquí puedes agregar la lógica para subir las fotos y luego guardar las URLs en tu base de datos.
-          
-          // Por ahora, solo confirmamos la recepción y registramos.
+          if (!rsvpId) {
+            console.error('RSVP ID no encontrado.');
+            return resolve({ statusCode: 400, body: 'RSVP ID not found' });
+          }
+
+          const photoUrls = [];
+          for (const file of filesToUpload) {
+            try {
+              const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${file.data.toString('base64')}`, {
+                folder: 'boda_oihane_ander'
+              });
+              photoUrls.push(result.secure_url);
+              await client.query(
+                `INSERT INTO photos (guest_id, url, nombre_archivo) VALUES ($1, $2, $3)`,
+                [rsvpId, result.secure_url, file.name]
+              );
+            } catch (uploadError) {
+              console.error('Error al subir a Cloudinary:', uploadError);
+            }
+          }
+
+          console.log('Fotos subidas a Cloudinary y URLs guardadas en Neon.');
           resolve({
             statusCode: 200,
-            body: JSON.stringify({ message: 'Photos received successfully!' }),
+            body: JSON.stringify({ message: 'Photos received and saved successfully!', urls: photoUrls }),
           });
         });
         
@@ -112,6 +131,13 @@ export async function handler(event) {
       body: 'Error processing form submission: ' + error.message,
     };
   } finally {
-    await client.end();
+    // Es crucial cerrar la conexión en el 'finally'
+    try {
+      if (client && client.end) {
+        await client.end();
+      }
+    } catch (err) {
+      console.error('Error al cerrar la conexión a la DB:', err);
+    }
   }
 }
