@@ -1,4 +1,5 @@
-import { Form } from 'multiparty';
+import { parse as parseHtml } from 'node-html-parser';
+import { Formidable } from 'formidable';
 
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
@@ -22,20 +23,13 @@ export async function handler(event) {
       };
     } else if (contentType && contentType.includes('multipart/form-data')) {
       // Manejar el formulario de fotos (multipart/form-data)
-      const form = new Form();
-      
-      const { fields, files } = await new Promise((resolve, reject) => {
-        // CORRECCIÓN CLAVE: Creamos un objeto de "petición falsa" para multiparty
-        const req = {
-          body: Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf-8'),
-          headers: event.headers,
-          on: (event, handler) => {
-            if (event === 'data') handler(req.body);
-            if (event === 'end') handler();
-          },
-        };
+      const form = new Formidable({
+        multiples: true, // Para permitir la subida de múltiples archivos
+        maxFileSize: 5 * 1024 * 1024, // 5MB
+      });
 
-        form.parse(req, (err, fields, files) => {
+      const { fields, files } = await new Promise((resolve, reject) => {
+        form.parse(event, (err, fields, files) => {
           if (err) return reject(err);
           resolve({ fields, files });
         });
