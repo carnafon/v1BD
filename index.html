@@ -10,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <style>#map{height:340px;border:1px solid var(--border);border-radius:.8rem}</style>
+  <style>
+    #map{height:340px;border:1px solid var(--border);border-radius:.8rem}
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
   <header class="header-hero">
@@ -77,42 +82,44 @@
             </select>
           </div>
           
-          <div>
-            <label for="menu">Tu menú *</label>
-            <select id="menu" name="menu" required>
-              <option value="" selected disabled>Selecciona una opción</option>
-              <option value="normal">Menú Normal</option>
-              <option value="vegetariano">Vegetariano/a</option>
-            </select>
-          </div>
-          
-          <div>
-            <label for="alergias">Alergias / intolerancias *</label>
-            <select id="alergias" name="alergias" onchange="toggleAlergias(this)" required>
-              <option value="" selected disabled>Selecciona una opción</option>
-              <option value="ninguna">Sin intolerancias / alergias</option>
-              <option value="especificar">Especificar en comentarios</option>
-            </select>
-          </div>
+          <div id="asistir-si-options">
+            <div>
+              <label for="menu">Tu menú *</label>
+              <select id="menu" name="menu" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="normal">Menú Normal</option>
+                <option value="vegetariano">Vegetariano/a</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="alergias">Alergias / intolerancias *</label>
+              <select id="alergias" name="alergias" onchange="toggleAlergias(this)" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="ninguna">Sin intolerancias / alergias</option>
+                <option value="especificar">Especificar en comentarios</option>
+              </select>
+            </div>
 
-          <div class="full hidden" id="alergias_detalle_wrap">
-            <label for="alergias_detalle">Detalle de alergias / intolerancias</label>
-            <textarea id="alergias_detalle" name="alergias_detalle" placeholder="Indica alergias o intolerancias"></textarea>
-          </div>
+            <div class="full hidden" id="alergias_detalle_wrap">
+              <label for="alergias_detalle">Detalle de alergias / intolerancias</label>
+              <textarea id="alergias_detalle" name="alergias_detalle" placeholder="Indica alergias o intolerancias"></textarea>
+            </div>
 
-          <div>
-            <label for="autobus">Autobús (invitado/a) *</label>
-            <select id="autobus" name="autobus" required>
-              <option value="" selected disabled>Selecciona una opción</option>
-              <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
-              <option value="moyua">Plaza Moyúa (Bilbao)</option>
-              <option value="no">No necesito autobús</option>
-            </select>
-          </div>
-          
-          <div class="full" id="add_guest_btn_wrap">
-            <div id="guests_container"></div>
-            <button type="button" class="btn-outline" id="add_guest_btn">Añadir acompañante</button>
+            <div>
+              <label for="autobus">Autobús (invitado/a) *</label>
+              <select id="autobus" name="autobus" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
+                <option value="moyua">Plaza Moyúa (Bilbao)</option>
+                <option value="no">No necesito autobús</option>
+              </select>
+            </div>
+            
+            <div class="full" id="add_guest_btn_wrap">
+              <div id="guests_container"></div>
+              <button type="button" class="btn-outline" id="add_guest_btn">Añadir acompañante</button>
+            </div>
           </div>
 
           <div class="full">
@@ -264,20 +271,20 @@
       // Ocultar campos de alergias al inicio
       toggleAlergias(document.getElementById('alergias'));
 
-      // Ocultar el botón de acompañantes si la persona no asiste
+      // Lógica para ocultar/mostrar campos si la persona asiste o no
       const asistirSelect = document.getElementById('asistir');
-      const addGuestBtnWrap = document.getElementById('add_guest_btn_wrap');
+      const asistirSiOptions = document.getElementById('asistir-si-options');
       
-      const toggleAddGuestButton = () => {
+      const toggleFieldsOnAsistir = () => {
         if (asistirSelect.value === 'no') {
-          addGuestBtnWrap.classList.add('hidden');
+          asistirSiOptions.classList.add('hidden');
         } else {
-          addGuestBtnWrap.classList.remove('hidden');
+          asistirSiOptions.classList.remove('hidden');
         }
       };
 
-      asistirSelect.addEventListener('change', toggleAddGuestButton);
-      toggleAddGuestButton(); // Llamar al cargar la página para que el estado inicial sea correcto
+      asistirSelect.addEventListener('change', toggleFieldsOnAsistir);
+      toggleFieldsOnAsistir(); // Llamar al cargar la página para que el estado inicial sea correcto
 
       // Lógica para añadir acompañantes dinámicamente
       const addGuestBtn = document.getElementById('add_guest_btn');
@@ -312,6 +319,9 @@
             data[key] = value;
         }
 
+        // Determinar la página de redirección
+        const redirectPage = (data.asistir === 'no') ? '/gracias-fotos.html' : '/gracias.html';
+
         // Convertir a JSON y enviar
         try {
             const response = await fetch(rsvpForm.action, {
@@ -325,7 +335,7 @@
             if (response.ok) {
                 const result = await response.json();
                 localStorage.setItem('rsvpId', result.rsvpId);
-                window.location.href = '/gracias.html';
+                window.location.href = redirectPage;
             } else {
                 console.error('Error en el servidor:', await response.text());
                 alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.');
