@@ -93,7 +93,7 @@
             <input id="telefono" name="telefono" type="tel" placeholder="">
           </div>
 
-          <div>
+          <div class="full">
             <label for="asistir">¿Asistirás? *</label>
             <select id="asistir" name="asistir" required>
               <option value="si">Sí</option>
@@ -101,8 +101,8 @@
             </select>
           </div>
           
-          <div id="asistir-si-options" class="grid grid-2">
-            <div>
+          <div id="asistir-si-options" class="full">
+            <div class="full">
               <label for="menu">Tu menú *</label>
               <select id="menu" name="menu">
                 <option value="" selected disabled>Selecciona una opción</option>
@@ -111,28 +111,30 @@
               </select>
             </div>
             
-            <div>
-              <label for="alergias">Alergias / intolerancias *</label>
-              <select id="alergias" name="alergias" onchange="toggleAlergias(this)">
-                <option value="" selected disabled>Selecciona una opción</option>
-                <option value="ninguna">Sin intolerancias / alergias</option>
-                <option value="especificar">Especificar en comentarios</option>
-              </select>
+            <div class="grid grid-2">
+              <div>
+                <label for="alergias">Alergias / intolerancias *</label>
+                <select id="alergias" name="alergias" onchange="toggleAlergias(this)">
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="ninguna">Sin intolerancias / alergias</option>
+                  <option value="especificar">Especificar en comentarios</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="autobus">Autobús (invitado/a) *</label>
+                <select id="autobus" name="autobus">
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
+                  <option value="moyua">Plaza Moyúa (Bilbao)</option>
+                  <option value="no">No necesito autobús</option>
+                </select>
+              </div>
             </div>
 
             <div class="full hidden" id="alergias_detalle_wrap">
               <label for="alergias_detalle">Detalle de alergias / intolerancias</label>
               <textarea id="alergias_detalle" name="alergias_detalle" placeholder="Indica alergias o intolerancias"></textarea>
-            </div>
-
-            <div>
-              <label for="autobus">Autobús (invitado/a) *</label>
-              <select id="autobus" name="autobus">
-                <option value="" selected disabled>Selecciona una opción</option>
-                <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
-                <option value="moyua">Plaza Moyúa (Bilbao)</option>
-                <option value="no">No necesito autobús</option>
-              </select>
             </div>
             
             <div class="full" id="add_guest_btn_wrap">
@@ -235,7 +237,7 @@
     function createGuestFields(guestNumber) {
         return `
             <div class="card guest-card">
-              <button type="button" class="remove-guest" onclick="this.closest('.guest-card').remove();">&times;</button>
+              <button type="button" class="remove-guest" onclick="this.closest('.guest-card').remove();">×</button>
               <h3 style="margin-top:0;">Acompañante ${guestNumber}</h3>
               <div class="grid grid-2">
                 <div class="full">
@@ -288,9 +290,6 @@
 
     // Lógica del formulario
     document.addEventListener('DOMContentLoaded', () => {
-      // Ocultar campos de alergias al inicio
-      toggleAlergias(document.getElementById('alergias'));
-
       // Elementos del formulario a controlar
       const asistirSelect = document.getElementById('asistir');
       const asistirSiOptions = document.getElementById('asistir-si-options');
