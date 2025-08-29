@@ -49,6 +49,20 @@
       object-fit: cover;
       border-radius: 8px;
     }
+    .btn-export {
+        margin-top: 1rem;
+        padding: 0.8rem 1.5rem;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 0.8rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+    }
+    .btn-export:hover {
+        background-color: #218838;
+    }
   </style>
 </head>
 <body>
@@ -56,6 +70,7 @@
     <div class="card">
       <h1 style="margin-top:0;">Datos de RSVP 📋</h1>
       <p>Visualiza y gestiona las confirmaciones de asistencia a la boda.</p>
+      <button class="btn-export" onclick="exportToExcel()">Exportar a Excel</button>
       <div id="loading" style="text-align: center;">Cargando datos...</div>
       <div id="error" style="color: red; display: none;">Error al cargar los datos.</div>
       <table id="rsvps-table" style="display: none;">
@@ -66,7 +81,9 @@
             <th>Teléfono</th>
             <th>Asistencia</th>
             <th>Menú</th>
+            <th>Alergias</th>
             <th>Autobús</th>
+            <th>Comentarios</th>
             <th>Acompañantes</th>
             <th>Fotos</th>
           </tr>
@@ -78,7 +95,9 @@
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+    let rsvpData = [];
+
+    async function loadData() {
       const loading = document.getElementById('loading');
       const errorDiv = document.getElementById('error');
       const table = document.getElementById('rsvps-table');
@@ -89,9 +108,9 @@
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
+        rsvpData = await response.json();
         
-        if (data.length === 0) {
+        if (rsvpData.length === 0) {
           loading.textContent = 'No hay datos de RSVP aún.';
           return;
         }
@@ -99,15 +118,18 @@
         loading.style.display = 'none';
         table.style.display = 'table';
 
-        data.forEach(rsvp => {
+        tbody.innerHTML = '';
+        rsvpData.forEach(rsvp => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td><strong>${rsvp.nombre}</strong><br><small>${rsvp.comentarios || ''}</small></td>
+            <td><strong>${rsvp.nombre}</strong></td>
             <td>${rsvp.email || ''}</td>
             <td>${rsvp.telefono || ''}</td>
             <td>${rsvp.asistir === 'si' ? '✅ Sí' : '❌ No'}</td>
-            <td>${rsvp.menu || ''}<br><small>${rsvp.alergias || ''}</small></td>
+            <td>${rsvp.menu || ''}</td>
+            <td>${rsvp.alergias || ''}</td>
             <td>${rsvp.autobus || ''}</td>
+            <td>${rsvp.comentarios || ''}</td>
             <td>
               <ul class="guest-info">
                 ${rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre ? 
@@ -138,7 +160,46 @@
         loading.style.display = 'none';
         errorDiv.style.display = 'block';
       }
-    });
+    }
+
+    function exportToExcel() {
+        if (rsvpData.length === 0) {
+            alert('No hay datos para exportar.');
+            return;
+        }
+
+        let csv = 'Nombre,Email,Teléfono,Asistencia,Menú,Alergias,Autobús,Comentarios,Acompañantes,Fotos\n';
+
+        rsvpData.forEach(rsvp => {
+            const row = [
+                `"${rsvp.nombre}"`,
+                `"${rsvp.email || ''}"`,
+                `"${rsvp.telefono || ''}"`,
+                `"${rsvp.asistir === 'si' ? 'Sí' : 'No'}"`,
+                `"${rsvp.menu || ''}"`,
+                `"${rsvp.alergias || ''}"`,
+                `"${rsvp.autobus || ''}"`,
+                `"${rsvp.comentarios || ''}"`,
+                `"${(rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre) ? rsvp.acompanantes.map(g => `${g.nombre} (${g.menu}) - ${g.alergias || 'Sin alergias'}`).join('; ') : ''}"`,
+                `"${(rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url) ? rsvp.fotos.map(p => p.url).join('; ') : ''}"`
+            ];
+            csv += row.join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'resumen_boda.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
   </script>
 </body>
 </html>
