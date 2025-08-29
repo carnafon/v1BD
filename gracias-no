@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>¡Gracias por tu respuesta! — Oihane & Ander</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="card" style="max-width:720px">
+    <h1>¡Gracias por tu respuesta!</h1>
+    <p>Lamentamos que no puedas asistir, pero agradecemos mucho que te hayas tomado el tiempo de avisarnos.</p>
+    <p><a href="/" class="btn-outline" style="padding:.6rem .9rem;display:inline-block">Volver a la página principal</a></p>
+  </main>
+</body>
+</html>
