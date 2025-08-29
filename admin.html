@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Datos de RSVP — Oihane & Ander</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      background-color: var(--white);
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .card {
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background-color: var(--soft-gray);
+      font-weight: bold;
+    }
+    tr:hover {
+      background-color: var(--soft-gray);
+    }
+    .guest-info, .photo-info {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.9em;
+    }
+    .photo-thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main class="admin-container">
+    <div class="card">
+      <h1 style="margin-top:0;">Datos de RSVP 📋</h1>
+      <p>Visualiza y gestiona las confirmaciones de asistencia a la boda.</p>
+      <div id="loading" style="text-align: center;">Cargando datos...</div>
+      <div id="error" style="color: red; display: none;">Error al cargar los datos.</div>
+      <table id="rsvps-table" style="display: none;">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Asistencia</th>
+            <th>Menú</th>
+            <th>Autobús</th>
+            <th>Acompañantes</th>
+            <th>Fotos</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loading = document.getElementById('loading');
+      const errorDiv = document.getElementById('error');
+      const table = document.getElementById('rsvps-table');
+      const tbody = table.querySelector('tbody');
+
+      try {
+        const response = await fetch('/.netlify/functions/get-data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        if (data.length === 0) {
+          loading.textContent = 'No hay datos de RSVP aún.';
+          return;
+        }
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+
+        data.forEach(rsvp => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${rsvp.nombre}</strong><br><small>${rsvp.comentarios || ''}</small></td>
+            <td>${rsvp.email || ''}</td>
+            <td>${rsvp.telefono || ''}</td>
+            <td>${rsvp.asistir === 'si' ? '✅ Sí' : '❌ No'}</td>
+            <td>${rsvp.menu || ''}<br><small>${rsvp.alergias || ''}</small></td>
+            <td>${rsvp.autobus || ''}</td>
+            <td>
+              <ul class="guest-info">
+                ${rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre ? 
+                  rsvp.acompanantes.map(g => `
+                    <li>
+                      ${g.nombre} (${g.menu})
+                      ${g.alergias ? `<br><small>${g.alergias}</small>` : ''}
+                    </li>
+                  `).join('') : '—'}
+              </ul>
+            </td>
+            <td>
+              <ul class="photo-info">
+                ${rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url ?
+                  rsvp.fotos.map(p => `
+                    <li><a href="${p.url}" target="_blank">
+                      <img src="${p.url}" alt="${p.nombre_archivo}" class="photo-thumb">
+                    </a></li>
+                  `).join('') : '—'}
+              </ul>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+
+      } catch (err) {
+        console.error(err);
+        loading.style.display = 'none';
+        errorDiv.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
