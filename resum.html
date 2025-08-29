@@ -173,7 +173,7 @@
             return;
         }
 
-        let csv = 'Nombre,Email,Teléfono,Asistencia,Menú,Alergias,Autobús,Comentarios,Acompañantes,Fotos,Asistentes del grupo\n';
+        let csv = 'Nombre;Email;Teléfono;Asistencia;Menú;Alergias;Autobús;Comentarios;Acompañantes;Fotos;Asistentes del grupo\n';
 
         rsvpData.forEach(rsvp => {
             const numAcompanantes = (rsvp.acompanantes && rsvp.acompanantes[0] && rsvp.acompanantes[0].nombre) ? rsvp.acompanantes.length : 0;
@@ -191,7 +191,7 @@
                 `"${(rsvp.fotos && rsvp.fotos[0] && rsvp.fotos[0].url) ? rsvp.fotos.map(p => p.url).join('; ') : ''}"`,
                 `"${totalAsistentes}"`
             ];
-            csv += row.join(',') + '\n';
+            csv += row.join(';') + '\n';
         });
 
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
