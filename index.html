@@ -218,22 +218,27 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
     const foodIcon = L.divIcon({className:'pin pin-food', html:'\ud83c\udf7d\ufe0f', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-28]});
     const busIcon  = L.divIcon({className:'pin pin-bus',  html:'\ud83d\ude8c', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-28]});
+    // Función para agregar un marcador con un pop-up que puede ser clicado para navegar
+    function addMarkerWithPopup(coords, icon, popupText) {
+        const marker = L.marker(coords, { icon: icon }).addTo(map);
+        
+        // Crear el contenido del popup como un elemento HTML
+        const popupContent = L.DomUtil.create('div', 'marker-popup');
+        popupContent.innerHTML = popupText + '<br><small style="color: var(--brand); cursor: pointer; text-decoration: underline;">Abrir en Google Maps</small>';
+        
+        // Asignar el evento de clic al texto dentro del popup
+        L.DomEvent.on(popupContent, 'click', function() {
+            window.open(`https://www.google.com/maps/search/?api=1&query=${coords[0]},${coords[1]}`, '_blank');
+        });
+
+        marker.bindPopup(popupContent);
+        return marker;
+    }
+
     const markers = [
-      L.marker(boroa, {icon: foodIcon})
-        .bindPopup('<b>Restaurante Boroa</b><br>Amorebieta<br>Clic para abrir en Google Maps')
-        .on('click', function(e) {
-          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
-        }),
-      L.marker(moyua, {icon: busIcon})
-        .bindPopup('<b>Plaza Moyúa</b><br>Bilbao — Punto de autobús<br>Clic para abrir en Google Maps')
-        .on('click', function(e) {
-          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
-        }),
-      L.marker(colgante, {icon: busIcon})
-        .bindPopup('<b>Puente Colgante</b><br>Las Arenas / Getxo — Punto de autobús<br>Clic para abrir en Google Maps')
-        .on('click', function(e) {
-          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
-        })
+        addMarkerWithPopup(boroa, foodIcon, '<b>Restaurante Boroa</b><br>Amorebieta'),
+        addMarkerWithPopup(moyua, busIcon, '<b>Plaza Moyúa</b><br>Bilbao — Punto de autobús'),
+        addMarkerWithPopup(colgante, busIcon, '<b>Puente Colgante</b><br>Las Arenas / Getxo — Punto de autobús')
     ];
     const group = L.featureGroup(markers).addTo(map);
     map.fitBounds(group.getBounds(), { padding: [20,20] });
