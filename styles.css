@@ -358,7 +358,19 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
     max-height: 100%;
   }
 
-  /* Nuevo estilo para el contador de cuenta atrás */
+  /* Estilo para el contador de cuenta atrás con animación */
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+}
+
 .countdown-single {
   color: #fff;
   font-weight: 700;
@@ -375,17 +387,18 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
   font-weight: 800;
   letter-spacing: -0.05em;
   
-  /* Efecto WordArt */
-  background: linear-gradient(135deg, #FFD700, #FFC0CB, #DAA520, #E6E6FA); /* Un degradado de colores dorados y suaves */
+  /* Efecto WordArt: degradado y sombra */
+  background: linear-gradient(135deg, #FFD700, #FFC0CB, #DAA520, #E6E6FA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
   
   /* Sombra para que el texto resalte */
-  text-shadow: 
-    0 5px 15px rgba(255, 255, 255, 0.4),  /* Sombra blanca superior */
-    0 10px 20px rgba(0, 0, 0, 0.5); /* Sombra oscura para profundidad */
+  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+
+  /* Animación de brillo */
+  animation: glow 2s infinite alternate;
 }
 
 .countdown-single {
