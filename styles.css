@@ -374,7 +374,18 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
   line-height: 1;
   font-weight: 800;
   letter-spacing: -0.05em;
-  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  
+  /* Efecto WordArt */
+  background: linear-gradient(135deg, #FFD700, #FFC0CB, #DAA520, #E6E6FA); /* Un degradado de colores dorados y suaves */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  
+  /* Sombra para que el texto resalte */
+  text-shadow: 
+    0 5px 15px rgba(255, 255, 255, 0.4),  /* Sombra blanca superior */
+    0 10px 20px rgba(0, 0, 0, 0.5); /* Sombra oscura para profundidad */
 }
 
 .countdown-single {
