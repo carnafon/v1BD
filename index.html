@@ -453,10 +453,10 @@
     });
 
     // Código del contador de cuenta atrás
-    const countdown = document.getElementById("countdown");
-    const weddingDate = new Date("2026-06-06T00:00:00").getTime();
-
-    function updateCountdown() {
+   document.addEventListener('DOMContentLoaded', () => {
+      // Countdown Timer
+      function updateCountdown() {
+        const eventDate = new Date('2026-06-06T17:00:00');
         const countdown = document.getElementById('countdown-timer');
         if (!countdown) {
             console.error("Countdown timer element not found.");
