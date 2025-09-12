@@ -357,4 +357,28 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
     max-width: 100%;
     max-height: 100%;
   }
+
+  /* Nuevo estilo para el contador de cuenta atrás */
+.countdown-single {
+  color: #fff;
+  font-weight: 700;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.countdown-single span {
+  font-size: clamp(3rem, 12vw, 8rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.countdown-single {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
 }
