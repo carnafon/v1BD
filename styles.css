@@ -49,7 +49,7 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 @media (max-width: 900px){.gallery{grid-template-columns:repeat(2,1fr)}}
 @media (max-width: 560px){.gallery{grid-template-columns:1fr}}
 .gallery figure{border-radius:.8rem;overflow:hidden;margin:0;background:#fff;border:1px solid var(--border);box-shadow:0 6px 16px rgba(0,0,0,.06)}
-.gallery img{display:block;width:100%;height:100%;aspect-ratio:3/2;object-fit:cover;transition:transform .25s ease;cursor:pointer;background:#eee}
+.gallery img{display:block;width:100%;height:100%;aspect-ratio:3/2;object-fit:cover;transition:transform .25s ease;background:#eee}
 .gallery figure:hover img{transform:scale(1.03)}
 
 /* Map pins */
@@ -257,108 +257,65 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
     cursor: pointer;
 }
 
-/* LIGHTBOX (Visor de fotos) */
-.lightbox-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 1rem;
-    cursor: pointer;
-}
-
-.lightbox-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.lightbox-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 0.8rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.lightbox-close,
-.lightbox-prev,
-.lightbox-next {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: white;
-    border-radius: 50%;
-    width: 80px; /* Duplicado de 40px */
-    height: 80px; /* Duplicado de 40px */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem; /* Aumentado */
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: all 0.2s ease;
-}
-
-.lightbox-close:hover,
-.lightbox-prev:hover,
-.lightbox-next:hover {
-    background: var(--brand);
-    border-color: var(--brand);
-    color: white;
-}
-
-.lightbox-close {
-    top: -1.5rem;
-    right: -1.5rem;
-    font-size: 2.5rem;
-    width: 60px;
-    height: 60px;
-}
-
-.lightbox-prev {
-    left: -4rem; /* Ajustado para el nuevo tamaño del botón (mitad del tamaño del botón) */
-}
-
-.lightbox-next {
-    right: -4rem; /* Ajustado para el nuevo tamaño del botón (mitad del tamaño del botón) */
-}
-
-@media (max-width: 768px) {
-  .lightbox-close {
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 45px;
-    height: 45px;
-    font-size: 1.8rem;
+/* Animación para el marco del contador */
+@keyframes border-glow {
+  0% {
+    box-shadow: 
+      0 0 10px rgba(255,165,0,0.4), /* Naranja suave */
+      0 0 20px rgba(255,215,0,0.2), /* Dorado */
+      0 0 30px rgba(255,105,180,0.1); /* Rosa */
   }
-  .lightbox-prev {
-    left: 0.5rem;
-    width: 45px;
-    height: 45px;
-    font-size: 1.8rem;
+  50% {
+    box-shadow: 
+      0 0 20px rgba(255,165,0,0.8), 
+      0 0 40px rgba(255,215,0,0.6),
+      0 0 60px rgba(255,105,180,0.4);
   }
-  .lightbox-next {
-    right: 0.5rem;
-    width: 45px;
-    height: 45px;
-    font-size: 1.8rem;
+  100% {
+    box-shadow: 
+      0 0 10px rgba(255,165,0,0.4),
+      0 0 20px rgba(255,215,0,0.2),
+      0 0 30px rgba(255,105,180,0.1);
   }
-  .lightbox-content {
-    max-width: 100%;
-    max-height: 100%;
-  }
+}
 
-  /* Estilo para el contador de cuenta atrás con animación */
+/* Contenedor del marco del contador */
+.countdown-frame {
+  margin-top: 1.5rem; /* Separación del mapa */
+  padding: 1.5rem;
+  background: linear-gradient(145deg, #f0f0f0, #e0e0e0); /* Fondo con relieve suave */
+  border-radius: 1.5rem;
+  border: 4px solid transparent; /* Borde inicial transparente para el glow */
+  position: relative;
+  overflow: hidden; /* Para que la sombra no se desborde demasiado */
+  box-shadow: 
+    inset 0 0 15px rgba(0,0,0,0.1), /* Relieve interno */
+    0 10px 30px rgba(0,0,0,0.2); /* Sombra exterior */
+  animation: border-glow 3s infinite alternate ease-in-out; /* Animación de brillo colorido */
+}
+
+/* Efecto 3D del borde del marco */
+.countdown-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 1.5rem;
+  border: 4px solid;
+  border-image: linear-gradient(
+    45deg, 
+    #FFD700 0%,   /* Dorado */
+    #FF69B4 25%,  /* Rosa fuerte */
+    #ADFF2F 50%,  /* Verde claro */
+    #87CEEB 75%,  /* Azul cielo */
+    #FFD700 100%  /* Dorado */
+  ) 1;
+  mask: linear-gradient(#fff 0 0); /* Para que el borde sea solo el exterior */
+  -webkit-mask: linear-gradient(#fff 0 0);
+  pointer-events: none;
+}
+
+
+/* Estilo para el contador de cuenta atrás (dentro del marco) */
 @keyframes glow {
     0% {
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2);
@@ -372,9 +329,8 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 }
 
 .countdown-single {
-  color: #fff;
+  color: #3b2f2f; /* Color de texto oscuro para contraste con el fondo claro del marco */
   font-weight: 700;
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -382,20 +338,22 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 }
 
 .countdown-single span {
-  font-size: clamp(3rem, 12vw, 8rem);
+  font-size: clamp(3rem, 10vw, 6rem); /* Ligeramente más pequeño para encajar en el marco */
   line-height: 1;
   font-weight: 800;
   letter-spacing: -0.05em;
   
   /* Efecto WordArt: degradado y sombra */
-  background: linear-gradient(135deg, #FFD700, #FFC0CB, #DAA520, #E6E6FA);
+  background: linear-gradient(135deg, #FFD700, #FFC0CB, #DAA520, #E6E6FA); /* Mismos colores que antes */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
   
   /* Sombra para que el texto resalte */
-  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  text-shadow: 
+    0 5px 10px rgba(0, 0, 0, 0.3), /* Sombra principal */
+    0 0 15px rgba(255, 255, 255, 0.5); /* Sombra clara para el efecto WordArt */
 
   /* Animación de brillo */
   animation: glow 2s infinite alternate;
@@ -404,5 +362,4 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 .countdown-single {
   font-size: 1.25rem;
   opacity: 0.9;
-}
 }
