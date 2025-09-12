@@ -10,297 +10,343 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <style>
+    #map{height:340px;border:1px solid var(--border);border-radius:.8rem}
+    .hidden {
+      display: none !important;
+    }
+    .guest-card {
+        position: relative;
+    }
+    .remove-guest {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0;
+        transition: color 0.2s ease;
+    }
+    .remove-guest:hover {
+        color: var(--brand);
+    }
+  </style>
 </head>
 <body>
   <header class="header-hero">
     <img class="hero-img" src="/assets/hero.jpg" alt="Oihane & Ander">
     <div class="hero-overlay"></div>
     <div class="hero-inner">
-      <h1 class="hero-title">Oihane <br>&<br> Ander</h1>
-      <p class="hero-sub">6 de junio de 2026</p>
-      <!-- Texto de bienvenida movido aquí -->
-      <p class="hero-intro-text">El tiempo se agota... y la emoción crece ⏳</p>
-      <!-- Contador con el nuevo tamaño -->
-      <div id="countdown-timer" class="countdown-container">
-        <!-- El JS llenará esto -->
+      <div>
+        <div class="hero-sub">6 de junio de 2026 · Amorebieta · Restaurante Boroa</div>
+        <h1 class="hero-title">Oihane & Ander</h1>
+        <div class="hero-meta">El tiempo se agota...⏳ y la emoción crece</div>
       </div>
-      <p class="hero-meta">Amorebieta · Restaurante Boroa</p>
     </div>
   </header>
 
   <nav class="navbar">
-    <button class="menu-toggle" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
+    <button class="menu-toggle" aria-controls="navbar-menu" aria-expanded="false" id="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
     </button>
-    <div class="navbar-inner" id="main-menu">
-      <a href="#info">Información</a>
-      <a href="#rsvp">RSVP</a>
+    <div class="navbar-inner" id="navbar-menu">
+      <a href="#detalles">Detalles</a>
+      <a href="#rsvp">Confirmar asistencia</a>
+      <a href="#llegar">Cómo llegar</a>
+      <a href="#regalo">Regalo</a>
       <a href="#galeria">Galería</a>
-      <a href="#regalos">Regalos</a>
     </div>
   </nav>
-  
+
   <main>
-    <section id="info">
-      <div class="card grid grid-2">
-        <div class="banner">
-          <div class="content">
-            <h2>Información clave</h2>
-            <p class="lead">
-              La ceremonia y el banquete tendrán lugar en el <strong>Restaurante Boroa</strong>.
-              Para vuestra comodidad, hemos organizado autobuses para el trayecto.
-            </p>
-          </div>
-        </div>
-        <div>
-          <p>
-            <strong>Ceremonia y Banquete</strong>
-            <br>
-            <span class="small">Sábado, 6 de junio de 2026 a las 17:00</span>
-            <br>
-            <a href="https://maps.app.goo.gl/uXp5h6GkHqL2qGkP9" target="_blank">
-              Restaurante Boroa
-              <br>
-              Barrio Boroa, 11
-              <br>
-              48340 Amorebieta, Bizkaia
-            </a>
-          </p>
-          <h3>Autobuses</h3>
-          <p>
-            Habrá servicio de autobús tanto a la ida como a la vuelta desde dos puntos.
-            <br>
-            La salida de los autobuses es a las <strong>16:15</strong>. ¡Sé puntual!
-          </p>
-          <ul style="list-style: none; padding: 0;">
-            <li><a href="https://maps.app.goo.gl/U161P3rXm2N5qKqD8" target="_blank" style="display:flex; gap:0.5rem; align-items:center;"> Estación de Autobuses de Bilbao</a></li>
-            <li><a href="https://maps.app.goo.gl/9tH7YwW2V9b2y7k87" target="_blank" style="display:flex; gap:0.5rem; align-items:center;"> Parada de autobús de Durango (Plaza Ezkurdi)</a></li>
-          </ul>
+    <section id="detalles" class="grid">
+      <div class="banner">
+        <div class="content">
+          <h2>La boda</h2>
+          <p class="lead">Autobuses desde <strong>Puente Colgante (Las Arenas/Getxo)</strong> y <strong>Plaza Moyúa (Bilbao)</strong>. Menús: Normal, Vegetariano/a, Infantil y opciones por alergias/intolerancias.</p>
         </div>
       </div>
     </section>
 
-    <section id="map">
-      <div id="map"></div>
-    </section>
-
-    <section id="rsvp">
+    <section id="rsvp" class="grid grid-2">
       <div class="card">
-        <h2 id="form-title">Confirmar asistencia</h2>
-        <p class="lead">
-          Por favor, confirma tu asistencia antes del <strong>1 de abril de 2026</strong>.
-        </p>
-        <form name="boda-2026" id="rsvp-form" method="POST" action="/.netlify/functions/submit-form">
-          <input type="hidden" name="form-name" value="boda-2026" />
+        <h2 id="form_title">Confirmar asistencia</h2>
+
+        <form class="rsvp" id="rsvp-form" method="POST" action="/.netlify/functions/submit-form">
           <div class="full">
-            <label for="nombre">Nombre y Apellidos</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Juan Pérez" required>
-            <span class="hint">Introduce tu nombre completo para identificar tu confirmación.</span>
+            <label for="nombre">Nombre y apellidos *</label>
+            <input id="nombre" name="nombre" type="text" required>
           </div>
-          <div class="full">
+
+          <div>
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="juan.perez@email.com" required>
-            <span class="hint">Para que podamos contactar contigo si es necesario.</span>
+            <input id="email" name="email" type="email" placeholder="tu@email.com">
           </div>
+          <div>
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="tel" placeholder="">
+          </div>
+
           <div class="full">
-            <label for="asistencia">¿Confirmas tu asistencia?</label>
-            <select id="asistencia" name="asistencia" required>
-              <option value="">Selecciona una opción</option>
-              <option value="si">Sí, asistiré</option>
-              <option value="no">No podré asistir</option>
+            <label for="asistir">¿Asistirás? *</label>
+            <select id="asistir" name="asistir" required>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
             </select>
           </div>
-          <div class="full hidden" id="menu-options">
-            <label for="menu">Restricción alimentaria / Alergia</label>
-            <textarea id="menu" name="menu" placeholder="Ej: alérgico al gluten, vegetariano..."></textarea>
+          
+          <div id="asistir-si-options" class="full">
+            <div class="full">
+              <label for="menu">Tu menú *</label>
+              <select id="menu" name="menu">
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="normal">Menú Normal</option>
+                <option value="vegetariano">Vegetariano/a</option>
+              </select>
+            </div>
+            
+            <div class="grid grid-2">
+              <div>
+                <label for="alergias">Alergias / intolerancias *</label>
+                <select id="alergias" name="alergias" onchange="toggleAlergias(this)">
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="ninguna">Sin intolerancias / alergias</option>
+                  <option value="especificar">Especificar en comentarios</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="autobus">Autobús (invitado/a) *</label>
+                <select id="autobus" name="autobus">
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="puente_colgante">Puente Colgante (Las Arenas/Getxo)</option>
+                  <option value="moyua">Plaza Moyúa (Bilbao)</option>
+                  <option value="no">No necesito autobús</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="full hidden" id="alergias_detalle_wrap">
+              <label for="alergias_detalle">Detalle de alergias / intolerancias</label>
+              <textarea id="alergias_detalle" name="alergias_detalle" placeholder="Indica alergias o intolerancias"></textarea>
+            </div>
+            
+            <div class="full" id="add_guest_btn_wrap">
+              <div id="guests_container"></div>
+              <button type="button" class="btn-outline" id="add_guest_btn">Añadir acompañante</button>
+            </div>
           </div>
-          <div class="full hidden" id="guest-options">
-            <label for="acompanantes">¿Cuántos acompañantes vendrán contigo?</label>
-            <select id="acompanantes" name="acompanantes">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
+
+          <div class="full">
+            <label for="comentarios">Comentarios</label>
+            <textarea id="comentarios" name="comentarios" placeholder="¿Algo que debamos tener en cuenta?"></textarea>
           </div>
-          <div class="full hidden" id="guests-container">
-            <!-- Guests will be added here dynamically -->
-          </div>
-          <div class="full actions">
-            <button type="submit">Enviar confirmación</button>
+
+          <div class="actions">
+            <button type="submit">Enviar</button>
+            <span class="hint">Al enviar aceptas el uso de tus datos para la organización del evento.</span>
           </div>
         </form>
       </div>
-    </section>
 
-    <section id="galeria">
       <div class="card">
-        <h2>Galería de fotos</h2>
-        <p class="lead">
-          Un pequeño álbum de fotos para que revivas nuestros momentos más especiales.
-        </p>
-        <div class="gallery">
-          <figure>
-            <img src="https://placehold.co/600x400/8d8d8d/ffffff?text=Imagen+de+la+Boda+1" alt="Ander y Oihane en un viaje">
-          </figure>
-          <figure>
-            <img src="https://placehold.co/600x400/8d8d8d/ffffff?text=Imagen+de+la+Boda+2" alt="Ander y Oihane en una cena romántica">
-          </figure>
-          <figure>
-            <img src="https://placehold.co/600x400/8d8d8d/ffffff?text=Imagen+de+la+Boda+3" alt="Ander y Oihane en la playa">
-          </figure>
-          <figure>
-            <img src="https://placehold.co/600x400/8d8d8d/ffffff?text=Imagen+de+la+Boda+4" alt="Ander y Oihane disfrutando del atardecer">
-          </figure>
-          <figure>
-            <img src="https://placehold.co/600x400/8d8d8d/ffffff?text=Imagen+de+la+Boda+5" alt="Ander y Oihane en un concierto">
-          </figure>
-          <figure>
-            <img src="https://placehold.co/600x400/8d8d8d/ffffff?text=Imagen+de+la+Boda+6" alt="Ander y Oihane en el campo">
-          </figure>
+        <h2 id="llegar">¿Cómo llegar?</h2>
+        <p class="small">Te recomendamos llegar con antelación. Habrá autobuses desde los puntos indicados.</p>
+        <div id="map"></div>
+        <div class="countdown-frame">
+          <div class="countdown" id="countdown"></div>
         </div>
       </div>
     </section>
 
-    <section id="regalos">
+    <section id="regalo" class="grid">
       <div class="card">
-        <h2>Regalos</h2>
-        <p class="lead">
-          Vuestra presencia en nuestro día ya es el mejor de los regalos. Si aun así queréis tener un detalle, podéis hacerlo a través del siguiente número de cuenta.
-        </p>
-        <p>
-          <strong class="iban">ES99 1234 5678 9012 3456 7890</strong>
-        </p>
-        <p class="small">
-          <button class="copy">Copiar IBAN</button>
-        </p>
+        <h2>Regalo</h2>
+        <p class="small">Vuestra compañía es el mejor regalo. Si aun así deseáis tener un detalle, os dejamos el IBAN:</p>
+        <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+          <code class="iban">ES50 2095 0039 1091 2543 9193</code>
+          <button class="copy" type="button" onclick="navigator.clipboard.writeText('ES5020950039109125439193')">Copiar IBAN</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria" class="grid">
+      <div class="card">
+        <h2>Galería</h2>
+        <div class="gallery">
+          <figure><img src="/assets/gallery1.jpg" alt="Foto 1"></figure>
+          <figure><img src="/assets/gallery2.jpg" alt="Foto 2"></figure>
+          <figure><img src="/assets/gallery3.jpg" alt="Foto 3"></figure>
+          <figure><img src="/assets/gallery4.jpg" alt="Foto 4"></figure>
+          <figure><img src="/assets/gallery5.jpg" alt="Foto 5"></figure>
+          <figure><img src="/assets/gallery6.jpg" alt="Foto 6"></figure>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <p class="small">© 2026 Oihane & Ander. Todos los derechos reservados.</p>
+    <p>#OihaneYAnder2026 · Hecho con ❤</p>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-23K6z+aP+Kk6z+aP+Kk6o9VlY3h6eH7G6D8Jv15g2G6D8Jv15g2G6" crossorigin=""></script>
+  <div id="lightbox" class="lightbox-overlay hidden">
+      <div class="lightbox-content">
+          <button class="lightbox-close">×</button>
+          <button class="lightbox-prev" aria-label="Foto anterior">‹</button>
+          <img src="" alt="Foto en galería" class="lightbox-img">
+          <button class="lightbox-next" aria-label="Foto siguiente">›</button>
+      </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Countdown Timer
-      const countdown = document.getElementById('countdown-timer');
-      const eventDate = new Date('2026-06-06T17:00:00');
+    const boroa = [43.24069, -2.752999];
+    const moyua = [43.26303, -2.93496];
+    const colgante = [43.3231, -3.0169];
+    const map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+    const foodIcon = L.divIcon({className:'pin pin-food', html:'\ud83c\udf7d\ufe0f', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-28]});
+    const busIcon  = L.divIcon({className:'pin pin-bus',  html:'\ud83d\ude8c', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-28]});
+    const markers = [
+      L.marker(boroa, {icon: foodIcon})
+        .bindPopup('<b>Restaurante Boroa</b><br>Amorebieta<br>Clic para abrir en Google Maps')
+        .on('click', function(e) {
+          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
+        }),
+      L.marker(moyua, {icon: busIcon})
+        .bindPopup('<b>Plaza Moyúa</b><br>Bilbao — Punto de autobús<br>Clic para abrir en Google Maps')
+        .on('click', function(e) {
+          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
+        }),
+      L.marker(colgante, {icon: busIcon})
+        .bindPopup('<b>Puente Colgante</b><br>Las Arenas / Getxo — Punto de autobús<br>Clic para abrir en Google Maps')
+        .on('click', function(e) {
+          window.open(`https://www.google.com/maps/search/?api=1&query=${e.latlng.lat},${e.latlng.lng}`, '_blank');
+        })
+    ];
+    const group = L.featureGroup(markers).addTo(map);
+    map.fitBounds(group.getBounds(), { padding: [20,20] });
 
-      function updateCountdown() {
-        const now = new Date();
-        const diff = eventDate - now;
-
-        // Solo mostrar horas y minutos
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-        countdown.innerHTML = `
-          <div class="countdown-box">
-            <span class="countdown-value">${hours}</span>
-            <span class="countdown-label">Horas</span>
-          </div>
-          <div class="countdown-box">
-            <span class="countdown-value">${minutes}</span>
-            <span class="countdown-label">Minutos</span>
-          </div>
-        `;
-
-        if (diff < 0) {
-          clearInterval(timerInterval);
-          countdown.innerHTML = "¡Ya estamos casados!";
+    // Funciones para la lógica del formulario
+    function toggleAlergias(selectElement, prefix = '') {
+      const id = prefix ? `${prefix}_alergias_detalle_wrap` : 'alergias_detalle_wrap';
+      const alergiasWrap = document.getElementById(id);
+      if (alergiasWrap) {
+        if (selectElement.value === 'especificar') {
+          alergiasWrap.classList.remove('hidden');
+        } else {
+          alergiasWrap.classList.add('hidden');
         }
       }
+    }
+    
+    function createGuestFields(guestNumber) {
+        return `
+            <div class="card guest-card">
+              <button type="button" class="remove-guest" onclick="this.closest('.guest-card').remove();">×</button>
+              <h3 style="margin-top:0;">Acompañante ${guestNumber}</h3>
+              <div class="grid grid-2">
+                <div class="full">
+                  <label for="acomp_${guestNumber}_nombre">Nombre y apellidos *</label>
+                  <input id="acomp_${guestNumber}_nombre" name="acomp_${guestNumber}_nombre" type="text" required>
+                </div>
+                <div>
+                  <label for="acomp_${guestNumber}_menu">Menú *</label>
+                  <select id="acomp_${guestNumber}_menu" name="acomp_${guestNumber}_menu" required>
+                    <option value="" selected disabled>Selecciona una opción</option>
+                    <option value="normal">Menú Normal</option>
+                    <option value="vegetariano">Vegetariano/a</option>
+                    <option value="infantil">Menú infantil</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="acomp_${guestNumber}_alergias">Alergias / intolerancias *</label>
+                  <select id="acomp_${guestNumber}_alergias" name="acomp_${guestNumber}_alergias" onchange="toggleAlergias(this, 'acomp_${guestNumber}')" required>
+                    <option value="" selected disabled>Selecciona una opción</option>
+                    <option value="ninguna">Sin intolerancias / alergias</option>
+                    <option value="especificar">Especificar</option>
+                  </select>
+                </div>
+                <div class="full hidden" id="acomp_${guestNumber}_alergias_detalle_wrap">
+                  <label for="acomp_${guestNumber}_alergias_detalle">Detalle de alergias</label>
+                  <textarea id="acomp_${guestNumber}_alergias_detalle" name="acomp_${guestNumber}_alergias_detalle"></textarea>
+                </div>
+              </div>
+            </div>
+        `;
+    }
+
+    // Lógica del menú desplegable
+    const menuToggle = document.getElementById('menu-toggle');
+    const navbarMenu = document.getElementById('navbar-menu');
+
+    menuToggle.addEventListener('click', () => {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+      menuToggle.setAttribute('aria-expanded', !isExpanded);
+      navbarMenu.classList.toggle('is-open');
+    });
+    
+    // Nueva lógica: cerrar el menú al hacer clic en un enlace
+    navbarMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        navbarMenu.classList.remove('is-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Lógica del formulario
+    document.addEventListener('DOMContentLoaded', () => {
+      // Elementos del formulario a controlar
+      const asistirSelect = document.getElementById('asistir');
+      const asistirSiOptions = document.getElementById('asistir-si-options');
+      const menuSelect = document.getElementById('menu');
+      const alergiasSelect = document.getElementById('alergias');
+      const autobusSelect = document.getElementById('autobus');
       
-      const timerInterval = setInterval(updateCountdown, 1000);
-      updateCountdown();
+      const toggleFieldsOnAsistir = () => {
+        if (asistirSelect.value === 'no') {
+          asistirSiOptions.classList.add('hidden');
+          // Remover required para campos ocultos
+          menuSelect.removeAttribute('required');
+          alergiasSelect.removeAttribute('required');
+          autobusSelect.removeAttribute('required');
+          // Restablecer valores para evitar envío de datos no deseados
+          menuSelect.value = "";
+          alergiasSelect.value = "";
+          autobusSelect.value = "";
+          // Ocultar detalle de alergias si estaba visible
+          document.getElementById('alergias_detalle_wrap').classList.add('hidden');
+        } else {
+          asistirSiOptions.classList.remove('hidden');
+          // Añadir required para campos visibles
+          menuSelect.setAttribute('required', 'required');
+          alergiasSelect.setAttribute('required', 'required');
+          autobusSelect.setAttribute('required', 'required');
+        }
+      };
 
-      // Map
-      const map = L.map('map').setView([43.2384, -2.7161], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+      asistirSelect.addEventListener('change', toggleFieldsOnAsistir);
+      toggleFieldsOnAsistir(); // Llamar al cargar la página para que el estado inicial sea correcto
 
-      // Restaurante Boroa
-      L.marker([43.2384, -2.7161], {
-        icon: L.divIcon({
-          className: 'pin',
-          html: '💍'
-        })
-      }).addTo(map)
-        .bindPopup('<b>Restaurante Boroa</b><br>Ceremonia y banquete.')
-        .openPopup();
+      // Lógica para añadir acompañantes dinámicamente
+      const addGuestBtn = document.getElementById('add_guest_btn');
+      const guestsContainer = document.getElementById('guests_container');
+      let guestCount = 0;
+
+      addGuestBtn.addEventListener('click', () => {
+        guestCount++;
+        guestsContainer.insertAdjacentHTML('beforeend', createGuestFields(guestCount));
+      });
       
-      // Autobús Bilbao
-      L.marker([43.2625, -2.9348], {
-        icon: L.divIcon({
-          className: 'pin pin-bus',
-          html: '🚌'
-        })
-      }).addTo(map)
-        .bindPopup('<b>Autobús Bilbao</b><br>Estación de Autobuses de Bilbao.');
-
-      // Autobús Durango
-      L.marker([43.1764, -2.6323], {
-        icon: L.divIcon({
-          className: 'pin pin-bus',
-          html: '🚌'
-        })
-      }).addTo(map)
-        .bindPopup('<b>Autobús Durango</b><br>Parada de autobús de Durango.');
-        
-      // RSVP form logic
-      const rsvpFormEl = document.getElementById('rsvp-form');
-      const asistenciaSelect = document.getElementById('asistencia');
-      const menuOptions = document.getElementById('menu-options');
-      const guestOptions = document.getElementById('guest-options');
-      const guestsContainer = document.getElementById('guests-container');
-      const numAcompanantesSelect = document.getElementById('acompanantes');
-      const formTitle = document.getElementById('form-title');
+      // Mostrar el nombre del invitado principal en el título
       const nombreInput = document.getElementById('nombre');
-      const copyButton = document.querySelector('.copy');
-
-      asistenciaSelect.addEventListener('change', (e) => {
-        const value = e.target.value;
-        if (value === 'si') {
-          menuOptions.classList.remove('hidden');
-          guestOptions.classList.remove('hidden');
-        } else {
-          menuOptions.classList.add('hidden');
-          guestOptions.classList.add('hidden');
-        }
-      });
-      
-      numAcompanantesSelect.addEventListener('change', (e) => {
-        const num = parseInt(e.target.value, 10);
-        guestsContainer.innerHTML = '';
-        if (num > 0) {
-          guestsContainer.classList.remove('hidden');
-          for (let i = 1; i <= num; i++) {
-            const guestCard = document.createElement('div');
-            guestCard.classList.add('card', 'guest-card');
-            guestCard.innerHTML = `
-              <h4>Acompañante ${i}</h4>
-              <div class="full">
-                <label for="acompanante-nombre-${i}">Nombre completo</label>
-                <input type="text" id="acompanante-nombre-${i}" name="acompanante_nombre_${i}" required>
-              </div>
-              <div class="full">
-                <label for="acompanante-menu-${i}">Restricción alimentaria / Alergia</label>
-                <textarea id="acompanante-menu-${i}" name="acompanante_menu_${i}" placeholder="Ej: alérgico al gluten, vegetariano..."></textarea>
-              </div>
-            `;
-            guestsContainer.appendChild(guestCard);
-          }
-        } else {
-          guestsContainer.classList.add('hidden');
-        }
-      });
+      const formTitle = document.getElementById('form_title');
       
       nombreInput.addEventListener('input', (e) => {
         const name = e.target.value.trim();
@@ -312,17 +358,21 @@
       });
       
       // Manejar el envío del formulario con JavaScript
-      rsvpFormEl.addEventListener('submit', async (e) => {
+      const rsvpForm = document.getElementById('rsvp-form');
+      rsvpForm.addEventListener('submit', async (e) => {
         e.preventDefault(); // Evita el envío tradicional del formulario
-        const formData = new FormData(rsvpFormEl);
+        const formData = new FormData(rsvpForm);
         const data = {};
         for (let [key, value] of formData.entries()) {
             data[key] = value;
         }
 
+        // Determinar la página de redirección
+        const redirectPage = (data.asistir === 'no') ? '/gracias-no.html' : '/gracias.html';
+
         // Convertir a JSON y enviar
         try {
-            const response = await fetch(rsvpFormEl.action, {
+            const response = await fetch(rsvpForm.action, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -331,53 +381,97 @@
             });
 
             if (response.ok) {
-                window.location.href = '/gracias.html';
+                const result = await response.json();
+                localStorage.setItem('rsvpId', result.rsvpId);
+                window.location.href = redirectPage;
             } else {
                 console.error('Error en el servidor:', await response.text());
-                // Reemplazando alert() con un mensaje en la UI
-                const errorMessage = document.createElement('p');
-                errorMessage.textContent = 'Error al enviar el formulario. Por favor, inténtalo de nuevo.';
-                errorMessage.style.color = 'red';
-                rsvpFormEl.prepend(errorMessage);
+                alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.');
             }
         } catch (error) {
             console.error('Error de red:', error);
-            // Reemplazando alert() con un mensaje en la UI
-            const errorMessage = document.createElement('p');
-            errorMessage.textContent = 'Error al enviar el formulario. Por favor, inténtalo de nuevo.';
-            errorMessage.style.color = 'red';
-            rsvpFormEl.prepend(errorMessage);
+            alert('Error al enviar el formulario. Por favor, inténtalo de nuevo.');
         }
       });
-      
-      // Copy IBAN to clipboard
-      if (copyButton) {
-          copyButton.addEventListener('click', () => {
-              const iban = document.querySelector('.iban').textContent.trim();
-              const tempInput = document.createElement('input');
-              tempInput.value = iban;
-              document.body.appendChild(tempInput);
-              tempInput.select();
-              document.execCommand('copy');
-              document.body.removeChild(tempInput);
-              copyButton.textContent = '¡Copiado!';
-              setTimeout(() => {
-                  copyButton.textContent = 'Copiar IBAN';
-              }, 2000);
-          });
-      }
-      
-      // Toggle mobile menu
-      const menuToggle = document.querySelector('.menu-toggle');
-      const mainMenu = document.getElementById('main-menu');
-      if (menuToggle && mainMenu) {
-        menuToggle.addEventListener('click', () => {
-          const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-          menuToggle.setAttribute('aria-expanded', !isExpanded);
-          mainMenu.classList.toggle('is-open', !isExpanded);
-        });
-      }
     });
+
+    // Lógica para el visor de fotos (lightbox)
+    const gallery = document.querySelector('.gallery');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.querySelector('.lightbox-img');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    let galleryImages = Array.from(gallery.querySelectorAll('img'));
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+        currentIndex = index;
+        lightboxImg.src = galleryImages[currentIndex].src;
+        lightbox.classList.remove('hidden');
+    }
+
+    function showNext() {
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        lightboxImg.src = galleryImages[currentIndex].src;
+    }
+
+    function showPrev() {
+        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        lightboxImg.src = galleryImages[currentIndex].src;
+    }
+
+    function closeLightbox() {
+        lightbox.classList.add('hidden');
+    }
+
+    gallery.addEventListener('click', (e) => {
+        if (e.target.tagName === 'IMG') {
+            const index = galleryImages.indexOf(e.target);
+            openLightbox(index);
+        }
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (e) => {
+        if (e.target.id === 'lightbox') {
+            closeLightbox();
+        }
+    });
+
+    lightboxNext.addEventListener('click', showNext);
+    lightboxPrev.addEventListener('click', showPrev);
+
+    // Cerrar con la tecla Esc
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+            closeLightbox();
+        }
+    });
+
+    // Código del contador de cuenta atrás
+    const countdown = document.getElementById("countdown");
+    const weddingDate = new Date("2026-06-06T00:00:00").getTime();
+
+    const updateCountdown = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = weddingDate - now;
+
+      if (distance < 0) {
+        clearInterval(updateCountdown);
+        countdown.innerHTML = "¡Es el gran día!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const textDays = days === 1 ? 'día' : 'días';
+
+      countdown.innerHTML = `
+        <div class="countdown-single"><span>${days}</span> ${textDays}</div>
+      `;
+    }, 1000);
   </script>
 </body>
 </html>
