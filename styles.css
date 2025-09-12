@@ -257,40 +257,31 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
     cursor: pointer;
 }
 
-/* Nuevos estilos para el contador en el encabezado */
-.countdown-container {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.countdown-box {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 1rem;
-  padding: 1rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  min-width: 90px;
-}
-
-.countdown-value {
-  font-size: clamp(2rem, 8vw, 4rem);
-  font-weight: 800;
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-}
-
-.countdown-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.9);
-}
+   /* Estilos para el nuevo contador */
+    .countdown-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .countdown-box {
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      min-width: 80px;
+    }
+    .countdown-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      display: block;
+    }
+    .countdown-label {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      color: white;
+      opacity: 0.8;
+      display: block;
+    }
