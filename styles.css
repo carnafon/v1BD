@@ -3,7 +3,7 @@
 .header-hero{position:relative;/* sin min-height fija para respetar la altura natural de la imagen */}
 .hero-img{display:block;width:100%;height:auto;}
 .hero-overlay{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(181,114,77,.55), rgba(59,47,47,.65))}
-.hero-inner{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#fff;padding:2rem 1rem}
+.hero-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:2rem 1rem}
 .hero-title{font-size:clamp(1.8rem,6vw,4rem);letter-spacing:.03em;margin:.2rem 0 0 0;font-weight:800}
 .hero-sub{opacity:.95;font-size:clamp(1rem,2.5vw,1.25rem)}
 .hero-meta{margin-top:.75rem;font-weight:600}
@@ -257,109 +257,40 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
     cursor: pointer;
 }
 
-/* Animación para el marco del contador */
-@keyframes border-glow {
-  0% {
-    box-shadow: 
-      0 0 10px rgba(181,114,77,0.4), /* brand */
-      0 0 20px rgba(207,165,138,0.2), /* brand-2 */
-      0 0 30px rgba(194,160,125,0.1); /* accent */
-  }
-  50% {
-    box-shadow: 
-      0 0 20px rgba(181,114,77,0.8), 
-      0 0 40px rgba(207,165,138,0.6),
-      0 0 60px rgba(194,160,125,0.4);
-  }
-  100% {
-    box-shadow: 
-      0 0 10px rgba(181,114,77,0.4),
-      0 0 20px rgba(207,165,138,0.2),
-      0 0 30px rgba(194,160,125,0.1);
-  }
+/* Nuevos estilos para el contador en el encabezado */
+.countdown-container {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Contenedor del marco del contador */
-.countdown-frame {
-  margin-top: 1.5rem; /* Separación del mapa */
-  padding: 1.5rem;
-  background: linear-gradient(145deg, #f0f0f0, #e0e0e0); /* Fondo con relieve suave */
-  border-radius: 1.5rem;
-  border: 4px solid transparent; /* Borde inicial transparente para el glow */
-  position: relative;
-  overflow: hidden; /* Para que la sombra no se desborde demasiado */
-  box-shadow: 
-    inset 0 0 15px rgba(0,0,0,0.1), /* Relieve interno */
-    0 10px 30px rgba(0,0,0,0.2); /* Sombra exterior */
-  animation: border-glow 3s infinite alternate ease-in-out; /* Animación de brillo colorido */
-}
-
-/* Efecto 3D del borde del marco */
-.countdown-frame::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border-radius: 1.5rem;
-  border: 4px solid;
-  border-image: linear-gradient(
-    45deg, 
-    var(--brand-2) 0%, 
-    var(--accent) 25%, 
-    var(--brand) 50%,
-    var(--brand-2) 75%,
-    var(--accent) 100%
-  ) 1;
-  mask: linear-gradient(#fff 0 0); /* Para que el borde sea solo el exterior */
-  -webkit-mask: linear-gradient(#fff 0 0);
-  pointer-events: none;
-}
-
-
-/* Estilo para el contador de cuenta atrás (dentro del marco) */
-@keyframes glow {
-    0% {
-        text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-    50% {
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
-    }
-    100% {
-        text-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-}
-
-.countdown-single {
-  color: var(--ink); /* Color de texto oscuro para contraste con el fondo claro del marco */
-  font-weight: 700;
+.countdown-box {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 90px;
 }
 
-.countdown-single span {
-  font-size: clamp(3rem, 10vw, 6rem); /* Ligeramente más pequeño para encajar en el marco */
-  line-height: 1;
+.countdown-value {
+  font-size: clamp(2rem, 8vw, 4rem);
   font-weight: 800;
-  letter-spacing: -0.05em;
-  
-  /* Efecto WordArt: degradado y sombra */
-  background: linear-gradient(135deg, var(--brand), var(--brand-2), var(--accent)); /* Nuevos colores cálidos */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  
-  /* Sombra para que el texto resalte */
-  text-shadow: 
-    0 5px 10px rgba(0, 0, 0, 0.3), /* Sombra principal */
-    0 0 15px rgba(255, 255, 255, 0.5); /* Sombra clara para el efecto WordArt */
-
-  /* Animación de brillo */
-  animation: glow 2s infinite alternate;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
-.countdown-single {
-  font-size: 1.25rem;
-  opacity: 0.9;
+.countdown-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
 }
