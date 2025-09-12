@@ -456,23 +456,43 @@
     const countdown = document.getElementById("countdown");
     const weddingDate = new Date("2026-06-06T00:00:00").getTime();
 
-    const updateCountdown = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = weddingDate - now;
+    function updateCountdown() {
+        const countdown = document.getElementById('countdown-timer');
+        if (!countdown) {
+            console.error("Countdown timer element not found.");
+            return;
+        }
 
-      if (distance < 0) {
-        clearInterval(updateCountdown);
-        countdown.innerHTML = "¡Es el gran día!";
-        return;
+        const now = new Date();
+        const diff = eventDate - now;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        countdown.innerHTML = `
+          <div class="countdown-box">
+            <span class="countdown-value">${days}</span>
+            <span class="countdown-label">Días</span>
+          </div>
+          <div class="countdown-box">
+            <span class="countdown-value">${hours}</span>
+            <span class="countdown-label">Horas</span>
+          </div>
+          <div class="countdown-box">
+            <span class="countdown-value">${minutes}</span>
+            <span class="countdown-label">Minutos</span>
+          </div>
+        `;
+
+        if (diff < 0) {
+          clearInterval(timerInterval);
+          countdown.innerHTML = "¡Ya estamos casados!";
+        }
       }
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const textDays = days === 1 ? 'día' : 'días';
-
-      countdown.innerHTML = `
-        <div class="countdown-single"><span>${days}</span> ${textDays}</div>
-      `;
-    }, 1000);
+      
+      const timerInterval = setInterval(updateCountdown, 1000);
+      updateCountdown();
   </script>
 </body>
 </html>
