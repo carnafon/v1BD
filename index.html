@@ -464,15 +464,10 @@
       }
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      const textDays = days === 1 ? 'día' : 'días';
 
       countdown.innerHTML = `
-        <div class="countdown-item"><strong>${days}</strong> días</div>
-        <div class="countdown-item"><strong>${hours}</strong> horas</div>
-        <div class="countdown-item"><strong>${minutes}</strong> minutos</div>
-        <div class="countdown-item"><strong>${seconds}</strong> segundos</div>
+        <div class="countdown-single"><span>${days}</span> ${textDays}</div>
       `;
     }, 1000);
   </script>
