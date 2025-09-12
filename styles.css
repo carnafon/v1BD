@@ -261,21 +261,21 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 @keyframes border-glow {
   0% {
     box-shadow: 
-      0 0 10px rgba(255,165,0,0.4), /* Naranja suave */
-      0 0 20px rgba(255,215,0,0.2), /* Dorado */
-      0 0 30px rgba(255,105,180,0.1); /* Rosa */
+      0 0 10px rgba(181,114,77,0.4), /* brand */
+      0 0 20px rgba(207,165,138,0.2), /* brand-2 */
+      0 0 30px rgba(194,160,125,0.1); /* accent */
   }
   50% {
     box-shadow: 
-      0 0 20px rgba(255,165,0,0.8), 
-      0 0 40px rgba(255,215,0,0.6),
-      0 0 60px rgba(255,105,180,0.4);
+      0 0 20px rgba(181,114,77,0.8), 
+      0 0 40px rgba(207,165,138,0.6),
+      0 0 60px rgba(194,160,125,0.4);
   }
   100% {
     box-shadow: 
-      0 0 10px rgba(255,165,0,0.4),
-      0 0 20px rgba(255,215,0,0.2),
-      0 0 30px rgba(255,105,180,0.1);
+      0 0 10px rgba(181,114,77,0.4),
+      0 0 20px rgba(207,165,138,0.2),
+      0 0 30px rgba(194,160,125,0.1);
   }
 }
 
@@ -303,11 +303,11 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
   border: 4px solid;
   border-image: linear-gradient(
     45deg, 
-    #FFD700 0%,   /* Dorado */
-    #FF69B4 25%,  /* Rosa fuerte */
-    #ADFF2F 50%,  /* Verde claro */
-    #87CEEB 75%,  /* Azul cielo */
-    #FFD700 100%  /* Dorado */
+    var(--brand-2) 0%, 
+    var(--accent) 25%, 
+    var(--brand) 50%,
+    var(--brand-2) 75%,
+    var(--accent) 100%
   ) 1;
   mask: linear-gradient(#fff 0 0); /* Para que el borde sea solo el exterior */
   -webkit-mask: linear-gradient(#fff 0 0);
@@ -329,7 +329,7 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
 }
 
 .countdown-single {
-  color: #3b2f2f; /* Color de texto oscuro para contraste con el fondo claro del marco */
+  color: var(--ink); /* Color de texto oscuro para contraste con el fondo claro del marco */
   font-weight: 700;
   display: flex;
   flex-direction: column;
@@ -344,7 +344,7 @@ footer{padding:2rem 1rem;text-align:center;color:var(--muted)}.small{font-size:.
   letter-spacing: -0.05em;
   
   /* Efecto WordArt: degradado y sombra */
-  background: linear-gradient(135deg, #FFD700, #FFC0CB, #DAA520, #E6E6FA); /* Mismos colores que antes */
+  background: linear-gradient(135deg, var(--brand), var(--brand-2), var(--accent)); /* Nuevos colores cálidos */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
